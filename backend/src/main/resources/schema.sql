@@ -1,0 +1,37 @@
+CREATE TABLE IF NOT EXISTS users (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    name VARCHAR(255) NOT NULL,
+    profile_picture_url VARCHAR(2048),
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(20) NOT NULL CHECK (role IN ('ADMIN', 'STUDENT', 'TUTOR'))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS tutor_profiles (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT UNIQUE NOT NULL,
+    bio TEXT,
+    subjects TEXT,
+    hourly_rate DOUBLE NOT NULL,
+    CONSTRAINT fk_tutor_profiles_user FOREIGN KEY (user_id) REFERENCES users(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS sessions (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    student_id BIGINT NOT NULL,
+    tutor_id BIGINT NOT NULL,
+    scheduled_time TIMESTAMP NOT NULL,
+    status VARCHAR(20) NOT NULL CHECK (status IN ('PENDING', 'CONFIRMED', 'COMPLETED', 'CANCELLED')),
+    CONSTRAINT fk_sessions_student FOREIGN KEY (student_id) REFERENCES users(id),
+    CONSTRAINT fk_sessions_tutor FOREIGN KEY (tutor_id) REFERENCES users(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS resources (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    tutor_id BIGINT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    file_url VARCHAR(255) NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP NOT NULL,
+    CONSTRAINT fk_resources_tutor FOREIGN KEY (tutor_id) REFERENCES users(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

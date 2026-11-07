@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="portrait-background" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="var(--portrait-bg-a, #dbeafe)"/>
+      <stop offset="1" stop-color="var(--portrait-bg-b, #ede9fe)"/>
+    </linearGradient>
+    <symbol id="portrait-base" viewBox="0 0 180 180">
+      <rect width="180" height="180" rx="36" fill="url(#portrait-background)"/>
+      <circle cx="145" cy="32" r="22" fill="#fff" opacity=".28"/>
+      <circle cx="27" cy="127" r="16" fill="#fff" opacity=".22"/>
+      <path d="M24 180c4-36 28-55 66-55s62 19 66 55H24Z" fill="var(--portrait-shirt, #2563eb)"/>
+      <path d="M75 111h30v31c-8 8-22 8-30 0v-31Z" fill="var(--portrait-skin, #c98762)"/>
+      <path d="M55 71c0-25 14-40 35-40s35 15 35 40v17c0 25-15 42-35 42S55 113 55 88V71Z" fill="var(--portrait-skin, #c98762)"/>
+      <path d="M52 75c-4-30 9-51 37-53 29-2 44 17 40 50-7-5-12-15-14-25-13 13-34 20-63 20v8Z" fill="var(--portrait-hair, #243047)"/>
+      <path d="M54 69c-7 15-5 37 2 47l9-4-2-43H54Z" fill="var(--portrait-hair, #243047)"/>
+      <path d="M126 68c7 15 5 37-2 47l-9-4 2-43h9Z" fill="var(--portrait-hair, #243047)"/>
+      <path d="M69 81c4-3 9-3 13 0M99 81c4-3 9-3 13 0" stroke="#293241" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="77" cy="89" r="2.5" fill="#293241"/>
+      <circle cx="105" cy="89" r="2.5" fill="#293241"/>
+      <path d="M91 89c-1 7-3 12-2 15 1 2 4 2 6 1" stroke="var(--portrait-shadow, #9a5e49)" stroke-width="2" stroke-linecap="round"/>
+      <path d="M80 109c7 6 16 6 23 0" stroke="#8c4050" stroke-width="3" stroke-linecap="round"/>
+      <path d="m59 137 31 19 31-19 12 43H47l12-43Z" fill="#fff" opacity=".92"/>
+      <path d="m75 129 15 27-17-7-8-15 10-5ZM105 129l-15 27 17-7 8-15-10-5Z" fill="var(--portrait-shirt, #2563eb)"/>
+    </symbol>
+    <symbol id="portrait-1" viewBox="0 0 180 180">
+      <use href="#portrait-base" style="--portrait-skin:#d99a72;--portrait-hair:#3f2b25;--portrait-shirt:#2563eb;--portrait-bg-a:#dbeafe;--portrait-bg-b:#e0e7ff"/>
+    </symbol>
+    <symbol id="portrait-2" viewBox="0 0 180 180">
+      <use href="#portrait-base" style="--portrait-skin:#f0c29c;--portrait-hair:#36251f;--portrait-shirt:#0f766e;--portrait-bg-a:#ccfbf1;--portrait-bg-b:#dbeafe"/>
+    </symbol>
+    <symbol id="portrait-3" viewBox="0 0 180 180">
+      <use href="#portrait-base" style="--portrait-skin:#a9684f;--portrait-hair:#1f2937;--portrait-shirt:#7c3aed;--portrait-bg-a:#ede9fe;--portrait-bg-b:#fae8ff"/>
+    </symbol>
+    <symbol id="portrait-4" viewBox="0 0 180 180">
+      <use href="#portrait-base" style="--portrait-skin:#f2c7a5;--portrait-hair:#a65d35;--portrait-shirt:#be123c;--portrait-bg-a:#ffe4e6;--portrait-bg-b:#ffedd5"/>
+    </symbol>
+    <symbol id="portrait-5" viewBox="0 0 180 180">
+      <use href="#portrait-base" style="--portrait-skin:#8d553f;--portrait-hair:#161b22;--portrait-shirt:#0369a1;--portrait-bg-a:#e0f2fe;--portrait-bg-b:#d1fae5"/>
+    </symbol>
+    <symbol id="portrait-6" viewBox="0 0 180 180">
+      <use href="#portrait-base" style="--portrait-skin:#e5b18a;--portrait-hair:#573c32;--portrait-shirt:#c2410c;--portrait-bg-a:#ffedd5;--portrait-bg-b:#fef3c7"/>
+    </symbol>
+    <symbol id="portrait-7" viewBox="0 0 180 180">
+      <use href="#portrait-base" style="--portrait-skin:#bd8061;--portrait-hair:#211c26;--portrait-shirt:#4338ca;--portrait-bg-a:#e0e7ff;--portrait-bg-b:#fce7f3"/>
+    </symbol>
+    <symbol id="portrait-8" viewBox="0 0 180 180">
+      <use href="#portrait-base" style="--portrait-skin:#f2c6a3;--portrait-hair:#352b2a;--portrait-shirt:#15803d;--portrait-bg-a:#dcfce7;--portrait-bg-b:#dbeafe"/>
+    </symbol>
+  </defs>
+</svg>

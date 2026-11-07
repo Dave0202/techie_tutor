@@ -1,0 +1,18 @@
+# Local secrets and environment overrides
+.env
+.env.*
+!.env.example
+
+# Node.js and Vite output
+frontend/node_modules/
+frontend/dist/
+
+# Java and Maven output
+backend/target/
+
+# IDE and operating-system files
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db

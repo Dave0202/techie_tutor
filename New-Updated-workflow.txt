@@ -1,0 +1,1402 @@
+Yes. Now that I can see the reference, I would **not tell Copilot to simply “copy this design.”** This image is primarily a **brand/marketing poster**, not a web UI mockup. The right instruction is to extract its **visual identity** and apply that identity to the existing application.
+
+The strongest visual cues I see are:
+
+- **Primary:** royal/electric blue
+- **Secondary:** rich golden yellow
+- **Background:** warm gold/orange with subtle glow
+- **Text:** white, black, and deep navy
+- **Accent:** bright yellow/gold
+- **Style:** energetic, youthful, educational, technology-focused
+- **Brand feeling:** premium + fun + trustworthy
+- **Graphics:** books, laptops, tablets, coding/technology, education
+- **Typography:** bold, high-impact headings with strong contrast
+- **Cards:** rounded, slightly elevated, blue/gold accents
+- **Icons:** clean, bold, mostly white/blue/gold
+- **Overall:** avoid making the actual website look like a poster; translate the aesthetic into a **professional SaaS/EdTech interface**.
+
+For your existing working app, I would give Copilot this:
+
+# EXISTING APP UI REDESIGN — TECHIETUTOR BRAND IMPLEMENTATION
+
+Act as a **Senior UI/UX Engineer and Frontend Architect**.
+
+The Virtual Teaching Website MVP is ALREADY BUILT and FUNCTIONAL.
+
+Your task is **NOT to rebuild the application**.
+
+Your task is to **redesign and polish the existing frontend** according to the provided TechieTutor visual reference and the requirements below while preserving all existing functionality.
+
+The attached reference image is the **brand and visual-direction reference** for the application.
+
+---
+
+# 1. CRITICAL RULE — DO NOT BREAK THE EXISTING APPLICATION
+
+Before modifying anything:
+
+1. Inspect the existing frontend structure.
+2. Inspect the existing routes.
+3. Inspect the existing components.
+4. Inspect the existing API service.
+5. Inspect authentication and role-based routing.
+6. Inspect all existing pages.
+7. Inspect the current Tailwind configuration.
+8. Understand how the frontend communicates with the Spring Boot backend.
+
+Then redesign the UI.
+
+DO NOT:
+
+- Rewrite the backend unnecessarily.
+- Replace working API endpoints.
+- Remove working functionality.
+- Change database models unless absolutely required by a new requirement.
+- Replace React with another framework.
+- Replace JavaScript with TypeScript.
+- Remove existing authentication.
+- Break routing.
+- Replace working business logic merely to change the UI.
+
+The objective is:
+
+**EXISTING FUNCTIONALITY + NEW PROFESSIONAL UI/UX.**
+
+---
+
+# 2. VISUAL REFERENCE
+
+Use the provided TechieTutor reference image as the **brand identity source**.
+
+Do NOT literally turn the website into a poster.
+
+Instead, extract the visual language from the image and translate it into a modern, professional educational technology platform.
+
+The website should feel like:
+
+> **A premium, energetic, trustworthy EdTech platform for students, parents, and tutors.**
+
+It should combine:
+
+- Education
+- Technology
+- Youthful energy
+- Professionalism
+- Trust
+- Creativity
+- Achievement
+
+---
+
+# 3. BRAND COLOUR SYSTEM
+
+Create a consistent design token system instead of manually choosing random colours throughout components.
+
+Primary colour:
+
+### Royal / Electric Blue
+
+Use blue as the primary brand colour for:
+
+- Primary buttons
+- Navigation
+- Links
+- Active states
+- Important icons
+- Dashboard accents
+- Focus states
+
+Use approximately:
+
+```text
+Primary Blue: #0057D9
+Deep Blue:    #063B8F
+Navy:         #062B63
+Bright Blue:  #1683FF
+```
+
+Secondary colour:
+
+### Golden Yellow
+
+Use gold for:
+
+- Highlights
+- Secondary CTAs
+- Achievement indicators
+- Important accents
+- Selected states
+- Decorative elements
+
+Suggested palette:
+
+```text
+Gold:        #FFB800
+Bright Gold: #FFC928
+Dark Gold:   #D99500
+```
+
+Supporting colours:
+
+```text
+White:       #FFFFFF
+Off White:   #FFFDF7
+Light Gold:  #FFF4C7
+Light Blue:  #EAF3FF
+Text Dark:   #111827
+Muted Text:  #64748B
+Success:     #16A34A
+Warning:     #F59E0B
+Danger:      #DC2626
+```
+
+Do not overuse gold.
+
+Blue should remain the dominant brand colour.
+
+Gold should act as an energetic accent.
+
+---
+
+# 4. IMPORTANT COLOUR BALANCE
+
+Do NOT make every page bright yellow/orange.
+
+The reference image uses gold heavily because it is a promotional poster.
+
+For the actual web application:
+
+### 60%+
+Use:
+
+- White
+- Off-white
+- Very light blue
+- Neutral backgrounds
+
+### ~25–30%
+Use:
+
+- Royal blue
+- Navy
+- Deep blue
+
+### ~5–10%
+Use:
+
+- Gold
+- Bright yellow
+
+This will preserve the reference's identity while making the application look professional.
+
+---
+
+# 5. OVERALL DESIGN LANGUAGE
+
+Use:
+
+- Rounded cards
+- Medium/large border radius
+- Soft shadows
+- Strong visual hierarchy
+- Spacious layouts
+- Clean typography
+- Subtle gradients
+- Professional iconography
+- Consistent spacing
+- Strong CTAs
+- Subtle hover animations
+- Smooth transitions
+
+Cards should feel slightly elevated.
+
+Avoid excessive shadows.
+
+Use subtle borders where appropriate.
+
+---
+
+# 6. TYPOGRAPHY
+
+Use a modern professional sans-serif font.
+
+Prefer:
+
+- Inter
+- Poppins
+- Nunito Sans
+
+If the existing application already has a suitable font, preserve it unless it conflicts with the new design.
+
+Headings should be:
+
+- Bold
+- Strong
+- Highly readable
+- Dark navy or blue
+
+Important hero headings may use blue + gold emphasis.
+
+Example visual hierarchy:
+
+```text
+Large heading
+Dark navy / deep blue
+
+Highlighted phrase
+Royal blue or gold
+
+Supporting text
+Muted dark gray
+```
+
+Do NOT use overly decorative fonts.
+
+---
+
+# 7. NAVBAR
+
+Redesign the existing navbar.
+
+It should feel like a real professional EdTech product.
+
+Desktop:
+
+```text
+[TechieTutor Logo]     Home   Find Tutors   Resources
+
+                       Login   [Get Started]
+```
+
+When authenticated, show role-appropriate navigation.
+
+Student:
+
+```text
+Home
+Find Tutors
+My Sessions
+Resources
+Dashboard
+```
+
+Tutor:
+
+```text
+Dashboard
+Sessions
+My Profile
+Resources
+```
+
+Features:
+
+- White or very light background
+- Blue logo/accent
+- Gold hover/active accent
+- Sticky navbar where appropriate
+- Subtle bottom border/shadow
+- Responsive mobile menu
+- User avatar/profile area when logged in
+
+---
+
+# 8. BRAND LOGO
+
+If an existing logo is available in the project, preserve it.
+
+If no logo exists, create a clean text-based brand treatment using:
+
+**TechieTutor**
+
+The logo should use:
+
+- Royal blue
+- Deep navy
+- Small gold accent
+
+Do NOT create a giant logo that dominates the interface.
+
+---
+
+# 9. LANDING PAGE
+
+The landing page should be the most visually impressive page.
+
+It should take inspiration from the reference image's:
+
+- Energy
+- Blue/gold combination
+- Education imagery
+- Technology imagery
+- Strong headline
+- Clear CTA
+
+But it must look like a modern website, not a flyer.
+
+Hero structure:
+
+```text
+Small badge:
+TECHNOLOGY • EDUCATION • SUCCESS
+
+Large heading:
+
+Learn.
+Create.
+Succeed.
+
+Supporting text:
+
+Connect with experienced tutors and build
+the skills you need to succeed.
+
+[Find a Tutor] [Become a Tutor]
+```
+
+Use a modern hero layout with:
+
+- Text on one side
+- Educational/technology visual treatment on the other
+- Blue/gold decorative accents
+- Soft glow
+- Floating cards or subtle educational illustrations if appropriate
+
+Do not overload the hero.
+
+---
+
+# 10. HERO VISUAL STYLE
+
+The reference contains:
+
+- Laptop
+- Tablet
+- Coding
+- Books
+- Students
+- Tutor
+- Technology
+- Wi-Fi
+- Education
+
+Use these concepts as inspiration.
+
+The website should communicate:
+
+**"Modern learning powered by technology."**
+
+Do not place all these objects into a single cluttered section.
+
+Instead, use them intelligently throughout the site.
+
+---
+
+# 11. FEATURE SECTION
+
+Create a professional feature section with cards such as:
+
+### Expert Tutors
+
+Learn from experienced and passionate tutors.
+
+### Flexible Learning
+
+Find sessions that fit your schedule.
+
+### Interactive Learning
+
+Access engaging learning resources.
+
+### Track Your Progress
+
+Manage your sessions and learning journey.
+
+Cards should use:
+
+- White background
+- Blue icon
+- Small gold accent
+- Rounded corners
+- Subtle hover elevation
+
+---
+
+# 12. SUBJECTS
+
+Create a visually attractive subject section.
+
+Possible subjects:
+
+- Mathematics
+- Python Programming
+- Scratch Programming
+- Graphics Design
+- Creative Writing
+- AI & Technology
+- ICT
+- SATS Preparation
+
+Use compact subject cards/chips.
+
+Use icons from Lucide React where possible.
+
+Each subject should have a subtle colour treatment based primarily on the blue/gold brand.
+
+---
+
+# 13. TUTOR SEARCH PAGE
+
+The tutor search page should feel like a professional marketplace.
+
+Layout:
+
+```text
+Find Your Perfect Tutor
+
+[ Search tutors... ]
+
+[All] [Mathematics] [Python] [ICT] [Graphics] ...
+
+------------------------------------------------
+
+Tutor Card
+Avatar
+Name
+Subjects
+Bio
+Hourly Rate
+
+[View Profile]
+```
+
+Tutor cards should include:
+
+- Avatar/initial
+- Name
+- Subjects
+- Short biography
+- Hourly rate
+- CTA
+- Optional availability indicator
+
+Use blue for primary actions.
+
+Use gold sparingly for important highlights.
+
+---
+
+# 14. TUTOR PROFILE
+
+Create a polished tutor profile page.
+
+Top section:
+
+- Tutor avatar
+- Name
+- Tutor role
+- Bio
+- Subjects
+- Hourly rate
+- Booking CTA
+
+Use a large profile card.
+
+Possible layout:
+
+```text
+------------------------------------------------
+| Avatar | Tutor Name                          |
+|        | Experienced ICT Tutor               |
+|        |                                     |
+|        | Subjects                            |
+|        | [Python] [ICT] [Maths]              |
+|        |                                     |
+|        | £XX/hour             [Book Session] |
+------------------------------------------------
+```
+
+Use gold for subtle highlights such as the hourly rate or important badge.
+
+---
+
+# 15. BOOKING UI
+
+The booking flow should look polished and trustworthy.
+
+Use:
+
+- Date picker
+- Time selector
+- Booking summary
+- Tutor information
+- Session duration
+- Price/rate
+- Confirm button
+
+The confirmation action should be visually prominent.
+
+Example:
+
+```text
+Book Your Session
+
+Tutor:
+TechieTutor Dave
+
+Date:
+[ 24 October 2026 ]
+
+Time:
+[ 4:00 PM ]
+
+Rate:
+£75/hour
+
+             [Confirm Booking]
+```
+
+After booking:
+
+Display a professional success state.
+
+---
+
+# 16. STUDENT DASHBOARD
+
+Redesign the student dashboard to look like a modern EdTech dashboard.
+
+Top:
+
+```text
+Good morning, Student 👋
+
+Ready to continue learning?
+```
+
+Statistics:
+
+```text
+Upcoming Sessions
+Pending Requests
+Completed Sessions
+Learning Resources
+```
+
+Use attractive statistic cards.
+
+Use blue as the dominant colour.
+
+Use gold for selected highlights.
+
+Below:
+
+### Upcoming Sessions
+
+Show:
+
+- Tutor
+- Subject
+- Date
+- Time
+- Status
+
+Then:
+
+### Recommended Tutors
+
+Then:
+
+### Learning Resources
+
+---
+
+# 17. TUTOR DASHBOARD
+
+Create a visually distinct but consistent tutor dashboard.
+
+Header:
+
+```text
+Welcome back, Tutor 👋
+
+Here's what's happening with your teaching.
+```
+
+Statistics:
+
+```text
+Total Students
+Pending Requests
+Upcoming Sessions
+Completed Sessions
+```
+
+Then:
+
+### Booking Requests
+
+with clear action buttons:
+
+```text
+Accept
+Cancel
+```
+
+Then:
+
+### Upcoming Sessions
+
+Then:
+
+### Learning Resources
+
+---
+
+# 18. STATUS BADGES
+
+Create a reusable StatusBadge component.
+
+Statuses:
+
+```text
+PENDING
+CONFIRMED
+COMPLETED
+CANCELLED
+```
+
+Use accessible colour differences.
+
+For example:
+
+- Pending → gold
+- Confirmed → blue
+- Completed → green
+- Cancelled → red
+
+Do not use huge badges.
+
+---
+
+# 19. RESOURCE PAGE
+
+Learning resources should feel like a digital library.
+
+Each resource card:
+
+```text
+[Book/File Icon]
+
+Python Functions
+Learn the fundamentals of Python functions.
+
+Tutor: Dave
+Created: 24 Oct 2026
+
+[Open Resource]
+```
+
+Use blue and gold accents.
+
+---
+
+# 20. LOGIN / REGISTER
+
+Redesign authentication pages.
+
+The page should look premium.
+
+Suggested layout:
+
+```text
+-----------------------------------------------
+|                                               |
+|        [Brand / Illustration] | Login Card   |
+|                              |               |
+|                              | Email         |
+|                              | Password      |
+|                              |               |
+|                              | [Sign In]     |
+|                                               |
+-----------------------------------------------
+```
+
+Use a subtle blue/gold background treatment.
+
+Do not make the form excessively large.
+
+---
+
+# 21. BUTTON SYSTEM
+
+Create consistent button variants.
+
+### Primary
+
+Blue background:
+
+```text
+#0057D9
+```
+
+White text.
+
+### Secondary
+
+White background with blue border/text.
+
+### Accent
+
+Gold background with dark text.
+
+### Danger
+
+Red.
+
+Buttons should have:
+
+- Rounded corners
+- Consistent height
+- Clear hover state
+- Focus state
+- Disabled state
+- Loading state
+
+---
+
+# 22. INPUTS
+
+All form controls should have a consistent design.
+
+Use:
+
+- Rounded borders
+- Clear labels
+- Good spacing
+- Blue focus ring
+- Helpful validation messages
+
+Avoid browser-default styling.
+
+---
+
+# 23. ANIMATIONS
+
+Use subtle animations only.
+
+Good examples:
+
+- Card hover elevation
+- Button hover
+- Fade-in
+- Slide-up
+- Modal transitions
+- Navbar transitions
+
+Avoid:
+
+- Excessive bouncing
+- Large spinning animations
+- Distracting page transitions
+- Animation on every element
+
+The application must remain professional.
+
+---
+
+# 24. ICONOGRAPHY
+
+Use `lucide-react`.
+
+Icons should generally be:
+
+- Blue
+- Navy
+- White when placed on blue
+- Gold for selected accents
+
+Do not mix many unrelated icon styles.
+
+---
+
+# 25. EMPTY STATES
+
+Every list page must have a polished empty state.
+
+Example:
+
+```text
+No upcoming sessions
+
+You don't have any scheduled sessions yet.
+
+[Find a Tutor]
+```
+
+Do not display empty white space.
+
+---
+
+# 26. LOADING STATES
+
+Replace generic blank loading screens with:
+
+- Skeleton cards
+- Skeleton text
+- Button loading states
+- Dashboard skeletons
+
+Use subtle animation.
+
+---
+
+# 27. ERROR STATES
+
+Errors should be friendly and professional.
+
+Example:
+
+```text
+Something went wrong
+
+We couldn't load your tutors.
+Please try again.
+
+[Try Again]
+```
+
+Do not expose raw backend stack traces to users.
+
+---
+
+# 28. MOBILE RESPONSIVENESS
+
+The reference image is desktop-oriented, but the application must be fully responsive.
+
+Test:
+
+```text
+320px
+375px
+768px
+1024px
+1440px+
+```
+
+On mobile:
+
+- Navbar becomes hamburger menu
+- Cards stack
+- Dashboard statistics become a responsive grid
+- Tables become cards or horizontally scrollable containers
+- Forms become single-column
+- Hero sections stack vertically
+- Buttons remain easy to tap
+
+---
+
+# 29. ACCESSIBILITY
+
+Preserve/add:
+
+- Semantic HTML
+- Proper labels
+- Keyboard navigation
+- Visible focus states
+- Accessible buttons
+- Accessible modals
+- Appropriate ARIA labels
+- Sufficient contrast
+
+Do not sacrifice accessibility for visual design.
+
+---
+
+# 30. DO NOT OVERDESIGN
+
+The reference image is intentionally very colourful because it is promotional artwork.
+
+The actual website must be more restrained.
+
+The goal is:
+
+**Reference image's personality + professional SaaS UI.**
+
+NOT:
+
+**Reference image pasted into a website.**
+
+Think:
+
+> Duolingo / modern EdTech / SaaS dashboard quality
+
+combined with:
+
+> TechieTutor's blue + gold educational identity.
+
+---
+
+# 31. TECHNICAL REQUIREMENTS
+
+Continue using:
+
+```text
+React
+JavaScript
+Vite
+Tailwind CSS
+Flowbite / Flowbite React
+Lucide React
+Axios
+React Router
+```
+
+Do not introduce a new UI framework unless absolutely necessary.
+
+Create reusable design components where appropriate.
+
+Centralize colours/design tokens instead of scattering values throughout the application.
+
+---
+
+# 32. PRESERVE EXISTING API INTEGRATION
+
+The following must continue working:
+
+- Authentication
+- JWT
+- Login
+- Registration
+- Tutor search
+- Tutor profile
+- Tutor profile editing
+- Booking
+- Session management
+- Session status updates
+- Learning resources
+- Role-based access
+- Logout
+
+After UI changes, verify that the existing API calls still work.
+
+---
+
+# 33. IMPLEMENTATION PROCESS
+
+Work in this order.
+
+### STEP 1 — AUDIT
+
+Inspect the existing application.
+
+Do not modify anything yet.
+
+Identify:
+
+- Existing pages
+- Existing components
+- Existing routes
+- Existing API calls
+- Existing authentication
+- Existing styling
+- Existing reusable components
+
+Then provide a concise implementation plan.
+
+### STEP 2 — DESIGN SYSTEM
+
+Implement:
+
+- Brand colours
+- Typography
+- Spacing
+- Border radius
+- Shadows
+- Buttons
+- Inputs
+- Cards
+- Status badges
+
+### STEP 3 — GLOBAL COMPONENTS
+
+Redesign:
+
+- Navbar
+- Footer
+- Buttons
+- Inputs
+- Cards
+- Modals
+- Loading states
+- Error states
+- Empty states
+
+### STEP 4 — PUBLIC EXPERIENCE
+
+Redesign:
+
+- Landing page
+- Login
+- Register
+
+### STEP 5 — STUDENT EXPERIENCE
+
+Redesign:
+
+- Tutor search
+- Tutor profile
+- Booking
+- Student dashboard
+- Sessions
+- Resources
+
+### STEP 6 — TUTOR EXPERIENCE
+
+Redesign:
+
+- Tutor dashboard
+- Session management
+- Tutor profile
+- Resource management
+
+### STEP 7 — RESPONSIVE POLISH
+
+Test all major pages on desktop/tablet/mobile.
+
+### STEP 8 — FINAL QA
+
+Verify:
+
+- No broken routes
+- No broken API calls
+- No console errors
+- No missing imports
+- No broken images
+- No horizontal overflow
+- No inaccessible buttons
+- No inconsistent colours
+- No inconsistent spacing
+- No broken authentication
+
+---
+
+# 34. IMPORTANT — BEFORE FINISHING
+
+Do a final visual review of every major page.
+
+Ask:
+
+1. Does this clearly look like the TechieTutor brand?
+2. Is blue the dominant brand colour?
+3. Is gold used as an accent rather than overwhelming the UI?
+4. Does the application feel modern and professional?
+5. Does it still feel educational and energetic?
+6. Does the UI look polished enough for a project defence?
+7. Does the website look good with realistic data?
+8. Does it work on mobile?
+9. Are loading/error/empty states handled?
+10. Has any existing functionality been broken?
+
+If any answer is "no", fix it before considering the redesign complete.
+
+---
+
+Not exactly — **and that's an important distinction**.
+
+The image you uploaded has a **strong 3D/embossed visual-text style**. For example, “VIRTUAL CLASSES” has:
+
+- Thick 3D extrusion/depth
+- Dark navy/black outline
+- Bright royal-blue faces
+- Gold/yellow highlights
+- Glossy/high-contrast appearance
+- Strong drop shadows
+- Almost poster/advertising typography
+
+The prompt I gave you earlier **captures the colour palette and brand personality**, but it deliberately tells Copilot to make the website more restrained and SaaS-like. So if you use that prompt unchanged, **the site will NOT necessarily come out with that same 3D visual-text aesthetic**.
+
+If the owner specifically wants that 3D look, we should tell Copilot explicitly to use it **where it makes sense**, especially on the landing page.
+
+### I'd add this section to the prompt
+
+# 33. 3D VISUAL TYPOGRAPHY — IMPORTANT BRAND REQUIREMENT
+
+The provided TechieTutor reference image uses a distinctive **3D promotional typography style**.
+
+This visual characteristic is important to the brand and should NOT be ignored.
+
+The website should incorporate this 3D visual language, especially on the **landing page hero section, major marketing headings, feature highlights, and important CTA areas**.
+
+## 3D TEXT STYLE
+
+When appropriate, use typography inspired by the reference image:
+
+- Bold/heavy font weight
+- Strong royal-blue text
+- Golden/yellow highlight layers
+- Dark navy/black outer stroke
+- Layered text shadows
+- Subtle 3D extrusion effect
+- High contrast
+- Slight glossy/highlight treatment
+- Strong visual depth
+- Premium promotional feel
+
+For example, the visual treatment for an important heading could resemble:
+
+```text
+LEARN
+CREATE
+SUCCEED
+```
+
+with:
+
+- Royal-blue primary text
+- Dark navy dimensional shadow
+- Gold accent/extrusion
+- Strong depth
+- Soft highlight
+- Subtle glow
+
+Similarly, important words such as:
+
+```text
+VIRTUAL
+CLASSES
+TUTORS
+LEARN
+SUCCEED
+```
+
+may use the 3D treatment.
+
+---
+
+## IMPORTANT — DO NOT APPLY 3D EFFECTS EVERYWHERE
+
+Do NOT turn the entire website into 3D typography.
+
+3D styling should be used strategically.
+
+Use it primarily for:
+
+### Landing Page
+
+- Hero headline
+- Main campaign text
+- Important section headings
+- Major CTA text
+
+### Marketing Sections
+
+- Featured subjects
+- Learning highlights
+- Achievement sections
+
+### Branding
+
+- TechieTutor brand treatment where appropriate
+
+Do NOT use heavy 3D effects for:
+
+- Form labels
+- Input fields
+- Dashboard tables
+- Navigation links
+- Body text
+- API-driven data
+- Session statuses
+- Resource descriptions
+- Small UI labels
+
+The application should combine:
+
+**3D promotional visual language**
+
+with
+
+**clean professional application UI.**
+
+---
+
+# 34. CSS IMPLEMENTATION
+
+Prefer CSS/Tailwind-based effects rather than rasterizing text into images.
+
+Use techniques such as:
+
+- `text-shadow`
+- Multiple layered shadows
+- Carefully controlled `drop-shadow`
+- CSS gradients
+- Text stroke where appropriate
+- Pseudo-elements for dimensional layers
+- Gradient text
+- Layered positioning
+
+Example conceptual effect:
+
+```css
+text-shadow:
+  1px 1px 0 #063B8F,
+  2px 2px 0 #063B8F,
+  3px 3px 0 #063B8F,
+  4px 4px 0 #021A3D,
+  6px 6px 12px rgba(0,0,0,0.35);
+```
+
+Adapt the effect to the actual design rather than blindly copying these exact values.
+
+The result should create the perception of dimensional typography.
+
+---
+
+# 35. HERO DESIGN DIRECTION
+
+The landing page should visually communicate the same energy as the reference image.
+
+Recommended hero structure:
+
+LEFT:
+
+```text
+Learn.
+Create.
+Succeed.
+
+Interactive learning
+for the next generation.
+
+[Find a Tutor] [Become a Tutor]
+```
+
+RIGHT:
+
+A modern educational/technology visual composition featuring concepts such as:
+
+- Student
+- Tutor
+- Laptop
+- Coding
+- Books
+- Online learning
+- Digital classroom
+
+Use blue/gold lighting accents.
+
+The hero should feel energetic and premium without becoming visually cluttered.
+
+---
+
+# 36. 3D CARD LANGUAGE
+
+Some important cards may also use subtle dimensional treatment.
+
+Examples:
+
+- Featured tutor
+- Featured subject
+- Premium learning feature
+- Achievement card
+- CTA card
+
+Use:
+
+- Layered shadows
+- Slight borders
+- Subtle gradient
+- Blue/gold accent edge
+
+Do NOT make every card look like a floating 3D object.
+
+---
+
+# 37. REFERENCE IMAGE PRIORITY
+
+When making visual decisions, use this hierarchy:
+
+1. **The uploaded TechieTutor reference image**
+2. The existing application's functionality
+3. The existing application's component architecture
+4. The requirements specified in this prompt
+5. General modern UI conventions
+
+The uploaded image is the primary reference for:
+
+- Brand colours
+- Visual energy
+- Typography personality
+- 3D promotional treatment
+- Educational imagery
+- Blue/gold identity
+
+However, translate it appropriately into a responsive web application rather than copying the poster literally.
+
+---
+
+# 38. FINAL VISUAL TARGET
+
+The final application should feel like:
+
+**TechieTutor promotional branding**
++
+**modern professional EdTech website**
++
+**subtle 3D visual depth**
++
+**clean SaaS usability**
+
+The landing page should make someone immediately recognize the connection between the website and the supplied TechieTutor reference image.
+
+If the reference image says:
+
+> "This is TechieTutor"
+
+the website should visually say the same thing.
+
+Do not reduce the design to merely:
+
+> "A generic white website with blue and yellow buttons."
+
+The distinctive **3D blue/gold visual identity must remain recognizable.**
+
+**So yes — I would add that section.**
+
+One more important point: the **3D text effect should be strongest on the landing page**, not throughout the dashboard. If you put huge 3D text everywhere, the application can quickly start looking like a children's poster rather than a professional teaching platform.
+
+The ideal result is:
+
+**Landing page → highly visual, 3D, blue/gold, impressive.**  
+**Login/Register → branded but clean.**  
+**Tutor search → polished marketplace UI.**  
+**Student/Tutor dashboards → professional SaaS UI with blue/gold accents.**
+
+That would give you the **"wow" factor during your defence without sacrificing usability**.
+
+# FINAL GOAL
+
+Transform the existing working Virtual Teaching Website into a:
+
+**Professional + Modern + Educational + Technology-focused + Blue/Gold branded EdTech platform**
+
+inspired by the provided TechieTutor reference image.
+
+The result should look like a **real product that could be shown to a client or project examiner**, not a student CRUD project.
+
+Most importantly:
+
+**Preserve the working application. Improve the experience. Do not rebuild unnecessarily.**
+
+### One recommendation before you run it
+
+I would **not let Copilot modify everything in one shot**. In Agent mode, start with:
+
+> **“Audit the existing frontend first. Do not make changes yet. Compare it against the attached reference and give me a component-by-component redesign plan.”**
+
+Then, once you approve the plan, let it implement the changes in stages.
+
+That will dramatically reduce the chance that Copilot "improves" the UI and accidentally breaks your working booking/authentication/API functionality.
+
+Also, the **most important visual distinction** is this: the poster has a very strong gold/orange background, but I would **not make your whole website gold/orange**. For a defence-ready web application, I'd use **white/light surfaces + royal blue as the primary colour + gold as the accent**. That preserves the owner's brand while looking much more professional.

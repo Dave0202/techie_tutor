@@ -1,0 +1,1087 @@
+# VIRTUAL TEACHING WEBSITE — MVP BUILD PROMPT
+
+Act as a **Principal Full-Stack Software Engineer, Senior UI/UX Designer, and Software Architect**.
+
+I am building a university project called **"Virtual Teaching Website"** and need a polished, professional MVP suitable for a **final-year project demonstration/defence**.
+
+Your goal is to build a **fully working, visually impressive, responsive, and maintainable MVP**, not just a collection of CRUD pages.
+
+The application should feel like a real modern EdTech product.
+
+---
+
+# 1. TECHNOLOGY STACK
+
+## Frontend
+- React
+- JavaScript (not TypeScript)
+- Vite
+- Tailwind CSS
+- Flowbite / Flowbite React
+- Axios
+- React Router DOM
+- Lucide React icons
+
+## Backend
+- Java 17
+- Spring Boot 3
+- Spring Web
+- Spring Data JPA
+- Spring Security
+- PostgreSQL
+- Lombok
+- JWT authentication using jjwt
+
+## Database
+- PostgreSQL
+
+---
+
+# 2. PROJECT STRUCTURE
+
+The repository must contain:
+
+```text
+/
+├── backend/
+└── frontend/
+```
+
+Backend:
+
+```text
+backend/
+└── src/
+    └── main/
+        ├── java/com/virtualteaching/
+        │   ├── config/
+        │   ├── controller/
+        │   ├── dto/
+        │   ├── exception/
+        │   ├── model/
+        │   ├── repository/
+        │   ├── security/
+        │   └── service/
+        └── resources/
+            ├── application.properties
+            └── schema.sql
+```
+
+Frontend:
+
+```text
+frontend/
+└── src/
+    ├── assets/
+    ├── components/
+    ├── pages/
+    ├── layouts/
+    ├── services/
+    ├── context/
+    ├── hooks/
+    ├── utils/
+    ├── App.jsx
+    ├── main.jsx
+    └── index.css
+```
+
+Keep the architecture modular and avoid putting the entire application into a few large files.
+
+---
+
+# 3. PRODUCT VISION
+
+The application is a **Virtual Teaching Platform** connecting students with tutors.
+
+A student should be able to:
+
+1. Register/login.
+2. Search for tutors.
+3. Filter tutors by subject.
+4. View tutor profiles.
+5. See tutor bio, subjects, hourly rate, and availability.
+6. Select a date/time.
+7. Book a tutoring session.
+8. View upcoming/past sessions.
+9. Track booking status.
+10. Access learning resources provided by tutors.
+
+A tutor should be able to:
+
+1. Register/login as a tutor.
+2. Create/update their tutor profile.
+3. Add subjects they teach.
+4. Set their hourly rate.
+5. View incoming booking requests.
+6. Accept/reject/cancel sessions.
+7. Mark completed sessions.
+8. Upload/add learning resources.
+9. View their teaching dashboard.
+
+---
+
+# 4. IMPORTANT UI/UX REQUIREMENT
+
+This is a **project defence**, so visual quality is extremely important.
+
+Do NOT create a generic-looking CRUD/admin interface.
+
+The application should look like a polished modern EdTech SaaS product.
+
+Design goals:
+
+- Professional
+- Modern
+- Minimal
+- Clean
+- Responsive
+- Accessible
+- Consistent
+- Premium-looking
+- Easy to demonstrate
+
+Use:
+
+- Strong typography hierarchy
+- Generous spacing
+- Rounded cards
+- Subtle shadows
+- Professional colour palette
+- Clear CTA buttons
+- Consistent iconography using Lucide React
+- Status badges
+- Hover states
+- Focus states
+- Smooth transitions
+- Responsive layouts
+- Attractive empty states
+- Loading skeletons/spinners
+- Useful error states
+- Confirmation dialogs where appropriate
+
+Avoid:
+
+- Excessive gradients
+- Excessive animations
+- Huge text
+- Cluttered dashboards
+- Random colours
+- Inconsistent spacing
+- Browser-default controls
+- Placeholder-looking UI
+- Unnecessary components
+
+The UI should look good on:
+
+- Desktop
+- Tablet
+- Mobile
+
+---
+
+# 5. MAIN PAGES
+
+Implement the following pages.
+
+## Public Pages
+
+### Landing Page
+
+Create a polished landing page containing:
+
+- Navbar
+- Hero section
+- Main headline explaining the platform
+- Supporting text
+- "Find a Tutor" CTA
+- "Become a Tutor" CTA
+- Feature section
+- How it works section
+- Popular subjects
+- Trust/statistics section
+- Footer
+
+The landing page should immediately communicate:
+
+**"Find the right tutor. Learn with confidence."**
+
+Use professional EdTech-style visual design.
+
+---
+
+### Login
+
+Create a professional login page.
+
+Fields:
+
+- Email
+- Password
+
+Features:
+
+- Validation
+- Password visibility toggle
+- Loading state
+- Error messages
+- JWT authentication
+- Redirect based on role
+
+---
+
+### Register
+
+Fields:
+
+- Full name
+- Email
+- Password
+- Confirm password
+- Role: Student / Tutor
+
+Validate:
+
+- Required fields
+- Valid email
+- Password length
+- Password confirmation
+
+Show useful validation messages.
+
+---
+
+# 6. STUDENT EXPERIENCE
+
+## Student Dashboard
+
+Create a professional dashboard with:
+
+- Welcome message
+- Upcoming session summary
+- Pending booking count
+- Completed sessions count
+- Recommended tutors
+- Recent learning resources
+
+Use cards and clean visual hierarchy.
+
+---
+
+## Tutor Search
+
+Route:
+
+```text
+/tutors
+```
+
+Features:
+
+- Search input
+- Subject filters
+- Tutor cards
+- Rate display
+- Subject badges
+- Tutor avatar/initial
+- Short bio
+- "View Profile" button
+
+Tutor cards should feel like real product cards rather than plain database records.
+
+Include:
+
+- Loading state
+- Empty state
+- Error state
+
+---
+
+## Tutor Profile
+
+Route:
+
+```text
+/tutors/:id
+```
+
+Display:
+
+- Tutor name
+- Avatar
+- Bio
+- Subjects
+- Hourly rate
+- Basic tutor information
+- Booking CTA
+
+Include a booking interface.
+
+---
+
+## Booking
+
+Allow students to:
+
+- Select date
+- Select time
+- Confirm booking
+
+Show a confirmation summary before submitting.
+
+Prevent invalid bookings.
+
+Display success/error feedback after booking.
+
+---
+
+# 7. TUTOR EXPERIENCE
+
+## Tutor Dashboard
+
+Create a dedicated tutor dashboard.
+
+Show:
+
+- Total sessions
+- Pending requests
+- Upcoming sessions
+- Completed sessions
+- Total resources
+
+Include a session management table/card list.
+
+Each session should show:
+
+- Student
+- Date
+- Time
+- Status
+- Actions
+
+Actions should change depending on status.
+
+---
+
+## Tutor Profile Management
+
+Allow tutors to edit:
+
+- Bio
+- Subjects
+- Hourly rate
+
+Include:
+
+- Form validation
+- Loading state
+- Success notification
+- Error notification
+
+---
+
+## Resource Management
+
+Tutors can add learning resources.
+
+Fields:
+
+- Title
+- Description
+- File URL / resource URL
+
+Display existing resources.
+
+Allow students to access/download/open resources.
+
+---
+
+# 8. STUDENT DASHBOARD — RESOURCES
+
+Students should be able to see available learning resources.
+
+Each resource should display:
+
+- Title
+- Description
+- Tutor
+- Created date
+- Open/download button
+
+Use attractive resource cards.
+
+---
+
+# 9. NAVIGATION
+
+Create a reusable Navbar.
+
+For guests:
+
+```text
+Home
+Find Tutors
+Login
+Register
+```
+
+For students:
+
+```text
+Home
+Find Tutors
+My Sessions
+Resources
+Dashboard
+Logout
+```
+
+For tutors:
+
+```text
+Dashboard
+Sessions
+My Profile
+Resources
+Logout
+```
+
+Make the navbar responsive with a mobile menu.
+
+---
+
+# 10. BACKEND DATA MODEL
+
+Create the following entities.
+
+## User
+
+Fields:
+
+```text
+id: Long
+name: String
+email: String UNIQUE
+password: String
+role: ENUM(STUDENT, TUTOR)
+```
+
+Passwords MUST be hashed using BCrypt.
+
+Never store plaintext passwords.
+
+---
+
+## TutorProfile
+
+Fields:
+
+```text
+id: Long
+userId: OneToOne User
+bio: String
+subjects: String
+hourlyRate: Double
+```
+
+---
+
+## Session
+
+Fields:
+
+```text
+id: Long
+studentId: User
+tutorId: User
+scheduledTime: LocalDateTime
+status: ENUM(PENDING, CONFIRMED, COMPLETED, CANCELLED)
+```
+
+---
+
+## Resource
+
+Fields:
+
+```text
+id: Long
+tutorId: User
+title: String
+fileUrl: String
+description: String
+createdAt: LocalDateTime
+```
+
+Use proper JPA relationships and constraints.
+
+---
+
+# 11. DATABASE
+
+Create:
+
+```text
+schema.sql
+```
+
+Database:
+
+```text
+virtual_teaching
+```
+
+Configure:
+
+```properties
+spring.datasource.url=jdbc:postgresql://localhost:5432/virtual_teaching
+spring.datasource.username=postgres
+spring.datasource.password=YOUR_PASSWORD
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=false
+```
+
+Do not hard-code secrets in production code.
+
+Prefer environment variables where practical.
+
+---
+
+# 12. REST API
+
+Implement clean REST endpoints.
+
+## Authentication
+
+```http
+POST /api/auth/register
+POST /api/auth/login
+```
+
+Login should return a JWT.
+
+---
+
+## Tutors
+
+```http
+GET /api/tutors
+GET /api/tutors/{id}
+PUT /api/tutors/profile
+```
+
+Support subject filtering.
+
+Example:
+
+```text
+GET /api/tutors?subject=Mathematics
+```
+
+---
+
+## Sessions
+
+```http
+POST /api/sessions/book
+GET /api/sessions/my-sessions
+PATCH /api/sessions/{id}/status
+```
+
+---
+
+## Resources
+
+```http
+POST /api/resources/upload
+GET /api/resources
+```
+
+---
+
+# 13. SECURITY
+
+Implement Spring Security + JWT properly.
+
+Requirements:
+
+- Password hashing with BCrypt
+- JWT generation
+- JWT validation
+- Authentication filter
+- Stateless authentication
+- Role-based authorization
+- Protected endpoints
+- Public authentication endpoints
+
+Students must not be able to modify tutor profiles.
+
+Tutors must not be able to impersonate students.
+
+Users must only be able to modify data they are authorized to modify.
+
+Return appropriate HTTP status codes:
+
+```text
+200 OK
+201 CREATED
+400 BAD REQUEST
+401 UNAUTHORIZED
+403 FORBIDDEN
+404 NOT FOUND
+409 CONFLICT
+500 INTERNAL SERVER ERROR
+```
+
+---
+
+# 14. DTOs
+
+Do not expose JPA entities directly from every API endpoint.
+
+Create appropriate DTOs for:
+
+- RegisterRequest
+- LoginRequest
+- LoginResponse
+- TutorResponse
+- TutorProfileRequest
+- BookingRequest
+- SessionResponse
+- ResourceRequest
+- ResourceResponse
+
+---
+
+# 15. ERROR HANDLING
+
+Implement global exception handling using:
+
+```text
+@RestControllerAdvice
+```
+
+Return consistent JSON error responses.
+
+Example:
+
+```json
+{
+  "message": "Tutor not found",
+  "status": 404,
+  "timestamp": "..."
+}
+```
+
+---
+
+# 16. FRONTEND API LAYER
+
+Create:
+
+```text
+src/services/api.js
+```
+
+Configure Axios.
+
+Automatically attach:
+
+```text
+Authorization: Bearer <JWT>
+```
+
+using an Axios interceptor.
+
+Handle:
+
+- 401 responses
+- Token expiration
+- API errors
+
+Store authentication state cleanly.
+
+---
+
+# 17. AUTHENTICATION STATE
+
+Create an authentication context/provider.
+
+It should expose:
+
+```javascript
+user
+token
+login()
+logout()
+register()
+isAuthenticated
+```
+
+Persist authentication appropriately.
+
+Protect private routes.
+
+Redirect users according to role.
+
+---
+
+# 18. REUSABLE COMPONENTS
+
+Create reusable components such as:
+
+```text
+Navbar
+Footer
+Button
+Input
+Modal
+LoadingSpinner
+Skeleton
+EmptyState
+ErrorMessage
+StatusBadge
+TutorCard
+ResourceCard
+SessionCard
+ProtectedRoute
+```
+
+Avoid duplicating UI code.
+
+---
+
+# 19. DEMO DATA
+
+This is extremely important for the project defence.
+
+Provide a seed/data initialization mechanism so the application does not open with an empty database.
+
+Create realistic sample data including:
+
+### Tutors
+
+Examples:
+
+- Mathematics tutor
+- Physics tutor
+- Computer Science tutor
+- English tutor
+
+Each should have:
+
+- Name
+- Bio
+- Subjects
+- Hourly rate
+
+### Students
+
+Create demo student accounts.
+
+### Sessions
+
+Create examples of:
+
+- Pending
+- Confirmed
+- Completed
+- Cancelled
+
+### Resources
+
+Create several realistic learning resources.
+
+Document the demo credentials clearly in the README.
+
+---
+
+# 20. UX STATES
+
+Every major API-driven page must handle:
+
+### Loading
+
+Display a skeleton or spinner.
+
+### Success
+
+Display a clear success notification.
+
+### Error
+
+Display a friendly error message.
+
+### Empty
+
+Display an attractive empty-state component.
+
+Example:
+
+> No upcoming sessions yet.
+> Find a tutor and book your first session.
+
+Do not leave blank white screens.
+
+---
+
+# 21. RESPONSIVE DESIGN
+
+Use Tailwind responsive utilities.
+
+The application must work correctly at:
+
+```text
+320px
+375px
+768px
+1024px
+1440px+
+```
+
+Check for:
+
+- Navigation overflow
+- Tables on mobile
+- Card layouts
+- Forms
+- Modals
+- Buttons
+- Dashboard grids
+
+---
+
+# 22. ACCESSIBILITY
+
+Use:
+
+- Semantic HTML
+- Labels for form fields
+- Keyboard-accessible buttons
+- Proper focus states
+- ARIA labels where needed
+- Sufficient colour contrast
+
+---
+
+# 23. CODE QUALITY
+
+Follow these principles:
+
+- Clean architecture
+- SOLID principles where appropriate
+- DRY
+- Separation of concerns
+- Reusable components
+- Meaningful naming
+- Small focused methods
+- No unnecessary duplication
+- No hard-coded API URLs throughout components
+
+Do NOT generate fake functionality.
+
+If a feature is not implemented, clearly identify it instead of pretending it works.
+
+---
+
+# 24. IMPORTANT IMPLEMENTATION RULE
+
+Do not attempt to generate the entire application blindly in one step.
+
+Build incrementally.
+
+Follow this order:
+
+### Phase 1
+Repository + project initialization
+
+### Phase 2
+Database + entities + repositories
+
+### Phase 3
+Authentication + JWT + security
+
+### Phase 4
+Tutor APIs
+
+### Phase 5
+Session/booking APIs
+
+### Phase 6
+Resource APIs
+
+### Phase 7
+Frontend foundation + routing + authentication
+
+### Phase 8
+Landing page + Navbar
+
+### Phase 9
+Tutor search + tutor profile
+
+### Phase 10
+Booking flow
+
+### Phase 11
+Student dashboard
+
+### Phase 12
+Tutor dashboard
+
+### Phase 13
+Resources
+
+### Phase 14
+Seed/demo data
+
+### Phase 15
+Polishing + responsive design + error states
+
+### Phase 16
+Testing and final verification
+
+After each phase:
+
+1. Check compilation.
+2. Check imports.
+3. Check API contracts.
+4. Fix errors before proceeding.
+5. Do not introduce unnecessary dependencies.
+
+---
+
+# 25. TESTING
+
+Create basic backend tests for important services/controllers.
+
+At minimum test:
+
+- Registration
+- Login
+- JWT authentication
+- Tutor search
+- Tutor profile update
+- Booking
+- Session status update
+- Resource creation
+
+Also verify important frontend flows manually.
+
+---
+
+# 26. README
+
+Create a professional README containing:
+
+- Project description
+- Architecture
+- Technology stack
+- Features
+- Folder structure
+- Database setup
+- Backend setup
+- Frontend setup
+- Environment variables
+- API endpoints
+- Demo accounts
+- How to run the application
+- Screenshots section placeholder
+- Future improvements
+
+---
+
+# 27. PROJECT DEFENCE QUALITY
+
+Remember that this application will be demonstrated to examiners.
+
+Prioritize these user journeys:
+
+### Journey 1 — Student
+
+```text
+Landing Page
+→ Register/Login
+→ Find Tutors
+→ Filter Mathematics
+→ Open Tutor Profile
+→ Select Date/Time
+→ Book Session
+→ View Booking
+→ See CONFIRMED/PENDING status
+```
+
+### Journey 2 — Tutor
+
+```text
+Login
+→ Tutor Dashboard
+→ View Booking Request
+→ Accept Session
+→ View Session
+→ Mark Completed
+→ Add Learning Resource
+```
+
+### Journey 3 — Student Resources
+
+```text
+Student Dashboard
+→ Resources
+→ Open Learning Material
+```
+
+These flows must work end-to-end.
+
+---
+
+# 28. VISUAL QUALITY STANDARD
+
+Before considering the MVP complete, review every page as if you were a professional UI/UX designer.
+
+Ask:
+
+- Does this look like a real EdTech product?
+- Is the visual hierarchy obvious?
+- Are buttons clearly actionable?
+- Are cards consistent?
+- Are spacing and typography consistent?
+- Does the page look good with realistic data?
+- Does it look good on mobile?
+- Are loading/error/empty states handled?
+- Does the interface feel polished enough for a university project defence?
+
+If not, improve it.
+
+---
+
+# 29. FINAL REQUIREMENT
+
+Generate **working code**, not pseudo-code.
+
+Do not use:
+
+```text
+TODO
+IMPLEMENT HERE
+YOUR CODE HERE
+...
+```
+
+unless absolutely unavoidable.
+
+Do not omit imports.
+
+Do not omit configuration required to run the application.
+
+When a file is created or modified, clearly state its path.
+
+For every implementation phase:
+
+1. Explain briefly what is being created.
+2. Provide the complete code.
+3. Explain where to place each file.
+4. Provide commands to run/test it.
+5. Identify any dependencies that need to be installed.
+6. Fix compilation/runtime issues before moving to the next phase.
+
+The final result should be a **professional, defence-ready Virtual Teaching Website MVP**, with a polished frontend and a properly structured Spring Boot REST backend.
