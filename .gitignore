@@ -2,6 +2,7 @@
 .env
 .env.*
 !.env.example
+logindetails.md
 
 # Node.js and Vite output
 frontend/node_modules/
