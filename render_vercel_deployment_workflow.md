@@ -56,7 +56,7 @@ The JDBC URL enforces TLS with `sslMode=REQUIRED`. Do not put the database passw
    | `VITE_CLOUDINARY_CLOUD_NAME` | `mrnfxyxs` |
    | `VITE_CLOUDINARY_UPLOAD_PRESET` | `virtual-tutor` |
 
-   Set `VITE_API_URL` for every Vercel environment you use (Production, Preview, and Development). Do not use `localhost`. The Vercel build now fails with a configuration error if this value is missing or points to localhost.
+   The frontend defaults to `https://techietutors.onrender.com/api` outside local development. Set `VITE_API_URL` in Vercel only if you use a different backend, and do not set it to `localhost`.
 
    The Cloudinary preset must allow unsigned image uploads. Never put a Cloudinary API secret in frontend environment variables.
 
