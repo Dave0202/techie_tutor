@@ -52,14 +52,17 @@ The JDBC URL enforces TLS with `sslMode=REQUIRED`. Do not put the database passw
 
    | Variable | Value |
    |---|---|
-   | `VITE_API_URL` | `https://your-api.onrender.com/api` |
+   | `VITE_API_URL` | The deployed Render service URL with `/api`, e.g. `https://your-api.onrender.com/api` |
    | `VITE_CLOUDINARY_CLOUD_NAME` | `mrnfxyxs` |
    | `VITE_CLOUDINARY_UPLOAD_PRESET` | `virtual-tutor` |
+
+   Set `VITE_API_URL` for every Vercel environment you use (Production, Preview, and Development). Do not use `localhost`. The Vercel build now fails with a configuration error if this value is missing or points to localhost.
 
    The Cloudinary preset must allow unsigned image uploads. Never put a Cloudinary API secret in frontend environment variables.
 
 5. Deploy the project and note the Vercel URL.
-6. If you use a custom domain, add its exact origin to the Render `CORS_ALLOWED_ORIGINS` variable and redeploy the backend. The production origin `https://techietutor.vercel.app` is also allowed by the backend.
+6. In Render, set `CORS_ALLOWED_ORIGINS` to the exact Vercel site origin (for example `https://techietutor.vercel.app`). Add any custom domain or Vercel preview origin that needs API access, then redeploy the backend.
+7. Redeploy the frontend after setting or changing `VITE_API_URL`; Vite embeds it at build time.
 
 ## 5. Verify the deployment
 

@@ -36,7 +36,12 @@ export default function LoginPage() {
       const data = await login(form);
       navigate(data.role === 'TUTOR' ? '/dashboard' : '/dashboard');
     } catch (error) {
-      setApiError(error.response?.data?.message || 'Unable to sign in. Please try again.');
+      setApiError(
+        error.response?.data?.message
+        || (!error.response
+          ? 'Could not reach the server. Check that VITE_API_URL points to your deployed Render API and that the service is available.'
+          : 'Unable to sign in. Please try again.')
+      );
     } finally {
       setLoading(false);
     }
