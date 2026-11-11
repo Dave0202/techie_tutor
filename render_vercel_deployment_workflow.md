@@ -4,25 +4,17 @@ This guide deploys the Spring Boot backend to Render and the React/Vite frontend
 
 ## 1. Prepare a production database
 
-The backend is configured for MySQL/MariaDB. Create a hosted MySQL-compatible database with a provider that permits connections from Render. Record its host, port, database name, username, and password.
+The backend is configured for the Aiven MySQL service using TLS. In the Aiven service's **Connection information**, use:
 
-Check whether the provider requires TLS. The current backend JDBC URL disables SSL (`useSSL=false`). If the provider requires SSL, update the JDBC configuration before deployment.
+| Setting | Value |
+|---|---|
+| `DB_HOST` | `mysql-virtual-tutor-wisdoma81-7d32.c.aivencloud.com` |
+| `DB_PORT` | `22303` |
+| `DB_NAME` | `defaultdb` |
+| `DB_USERNAME` | `avnadmin` |
+| `DB_PASSWORD` | Set the current Aiven password as a secret in Render |
 
-## 2. Configure the backend to use Render's port
-
-In `backend/src/main/resources/application.properties`, change:
-
-```properties
-server.port=8080
-```
-
-to:
-
-```properties
-server.port=${PORT:8080}
-```
-
-Render can then supply its assigned port; local development retains port 8080.
+The JDBC URL enforces TLS with `sslMode=REQUIRED`. Do not put the database password or service URI in this repository.
 
 ## 3. Deploy the backend to Render
 
@@ -34,11 +26,11 @@ Render can then supply its assigned port; local development retains port 8080.
 
    | Variable | Value |
    |---|---|
-   | `DB_HOST` | Hosted database hostname |
-   | `DB_PORT` | Hosted database port |
-   | `DB_NAME` | Hosted database name |
-   | `DB_USERNAME` | Hosted database username |
-   | `DB_PASSWORD` | Hosted database password |
+   | `DB_HOST` | `mysql-virtual-tutor-wisdoma81-7d32.c.aivencloud.com` |
+   | `DB_PORT` | `22303` |
+   | `DB_NAME` | `defaultdb` |
+   | `DB_USERNAME` | `avnadmin` |
+   | `DB_PASSWORD` | Current Aiven password (enter as a secret; do not commit it) |
    | `JWT_SECRET` | Strong, unique random secret of at least 32 characters |
    | `CORS_ALLOWED_ORIGINS` | Your Vercel site origin, e.g. `https://your-app.vercel.app` |
    | `CLOUDINARY_CLOUD_NAME` | `mrnfxyxs` |
