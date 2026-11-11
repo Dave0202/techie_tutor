@@ -107,9 +107,7 @@ class VirtualTeachingApplicationTests {
     void invalidLoginShouldReturnUnauthorizedInsteadOfInternalServerError() throws Exception {
         mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {"email":"missing@example.com","password":"wrong-password"}
-                                """))
+                        .content("{\"email\":\"missing@example.com\",\"password\":\"wrong-password\"}"))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.message").value("Invalid email or password"));
     }
