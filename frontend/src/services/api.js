@@ -1,7 +1,11 @@
 import axios from 'axios';
 
+const configuredBaseURL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
+const trimmedBaseURL = configuredBaseURL.replace(/\/+$/, '');
+const apiBaseURL = /\/api$/i.test(trimmedBaseURL) ? trimmedBaseURL : `${trimmedBaseURL}/api`;
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8080/api',
+  baseURL: apiBaseURL,
   headers: { 'Content-Type': 'application/json' }
 });
 
