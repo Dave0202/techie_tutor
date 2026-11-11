@@ -76,7 +76,8 @@ class VirtualTeachingApplicationTests {
                 "http://localhost:4173",
                 "http://127.0.0.1:4173",
                 "http://localhost:4174",
-                "http://127.0.0.1:4174")) {
+                "http://127.0.0.1:4174",
+                "https://techietutor.vercel.app")) {
             mockMvc.perform(options("/api/auth/register")
                             .header("Origin", origin)
                             .header("Access-Control-Request-Method", "POST")
@@ -100,6 +101,15 @@ class VirtualTeachingApplicationTests {
                         .header("Access-Control-Request-Method", "POST")
                         .header("Access-Control-Request-Headers", "content-type"))
                 .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void invalidLoginShouldReturnUnauthorizedInsteadOfInternalServerError() throws Exception {
+        mockMvc.perform(post("/api/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"missing@example.com\",\"password\":\"wrong-password\"}"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.message").value("Invalid email or password"));
     }
 
     @Test
