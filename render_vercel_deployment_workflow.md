@@ -59,14 +59,14 @@ The JDBC URL enforces TLS with `sslMode=REQUIRED`. Do not put the database passw
    The Cloudinary preset must allow unsigned image uploads. Never put a Cloudinary API secret in frontend environment variables.
 
 5. Deploy the project and note the Vercel URL.
-6. If you use a custom domain, add its origin to the Render `CORS_ALLOWED_ORIGINS` variable and redeploy the backend.
+6. If you use a custom domain, add its exact origin to the Render `CORS_ALLOWED_ORIGINS` variable and redeploy the backend. The production origin `https://techietutor.vercel.app` is also allowed by the backend.
 
 ## 5. Verify the deployment
 
 - Register an account and sign in; confirm the frontend can reach the Render API.
 - Upload a profile picture, refresh the page, and confirm the picture remains visible. Profile picture URLs are stored in the database.
 - If the browser reports a CORS error, verify that `CORS_ALLOWED_ORIGINS` exactly matches the Vercel origin, without a trailing slash, then redeploy the backend.
-- If refreshing a nested route such as `/profile` returns a 404, configure a Vercel rewrite to serve `index.html` for app routes.
+- The frontend includes a Vercel rewrite so nested routes such as `/profile` serve the React application on refresh.
 
 ## Notes
 
