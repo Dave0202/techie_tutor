@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const configuredBaseURL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
+const configuredBaseURL = import.meta.env.VITE_API_URL
+  || (import.meta.env.DEV ? 'http://localhost:8080/api' : 'https://techietutors.onrender.com/api');
 const trimmedBaseURL = configuredBaseURL.replace(/\/+$/, '');
 const apiBaseURL = /\/api$/i.test(trimmedBaseURL) ? trimmedBaseURL : `${trimmedBaseURL}/api`;
 
@@ -12,8 +13,12 @@ const api = axios.create({
 export function getPublicFileUrl(fileUrl) {
   if (!fileUrl) return '';
   if (/^https?:\/\//i.test(fileUrl)) return fileUrl;
-  const baseUrl = api.defaults.baseURL.replace(/\/$/, '');
-  return `${baseUrl}${fileUrl.startsWith('/api/') ? fileUrl.slice(4) : `/${fileUrl.replace(/^\/+/, '')}`}`;
+  
+  // Extract root origin by removing trailing /api from baseURL
+  const rootOrigin = api.defaults.baseURL.replace(/\/api\/?$/, '');
+  const cleanPath = fileUrl.startsWith('/api') ? fileUrl.slice(4) : fileUrl;
+  
+  return `${rootOrigin}${cleanPath.startsWith('/') ? '' : '/'}${cleanPath}`;
 }
 
 api.interceptors.request.use((config) => {
