@@ -72,6 +72,9 @@ public class AdminService {
         user.setName(request.getName().trim());
         user.setEmail(email);
         user.setRole(updatedRole);
+        if (updatedRole != Role.TUTOR) {
+            user.setTutorConfirmed(false);
+        }
         if (request.getPassword() != null && !request.getPassword().isBlank()) {
             user.setPassword(passwordEncoder.encode(request.getPassword()));
         }
@@ -90,6 +93,17 @@ public class AdminService {
             user.setTutorProfile(null);
         }
 
+        return toResponse(userRepository.save(user));
+    }
+
+    @Transactional
+    public AdminUserResponse confirmTutor(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+        if (user.getRole() != Role.TUTOR) {
+            throw new ConflictException("Only tutor accounts can be confirmed");
+        }
+        user.setTutorConfirmed(true);
         return toResponse(userRepository.save(user));
     }
 
@@ -143,6 +157,7 @@ public class AdminService {
                 .email(user.getEmail())
                 .profilePictureUrl(user.getProfilePictureUrl())
                 .role(user.getRole())
+                .tutorConfirmed(user.isTutorConfirmed())
                 .bio(profile == null ? null : profile.getBio())
                 .subjects(profile == null ? null : profile.getSubjects())
                 .hourlyRate(profile == null ? null : profile.getHourlyRate())

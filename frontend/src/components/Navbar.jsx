@@ -1,5 +1,5 @@
 import { Menu, X, LogOut, UserCircle2 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getPublicFileUrl } from '../services/api';
@@ -8,8 +8,34 @@ export default function Navbar() {
   const { user, logout, isAuthenticated } = useAuth();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const navRef = useRef(null);
+  const toggleRef = useRef(null);
+
+  useEffect(() => {
+    if (!open) return undefined;
+
+    const handlePointerDown = (event) => {
+      const target = event.target;
+      if (!navRef.current || !toggleRef.current) return;
+      if (!navRef.current.contains(target) && !toggleRef.current.contains(target)) {
+        setOpen(false);
+      }
+    };
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') setOpen(false);
+    };
+
+    document.addEventListener('mousedown', handlePointerDown);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handlePointerDown);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [open]);
 
   const handleLogout = () => {
+    setOpen(false);
     logout();
     navigate('/');
   };
@@ -49,7 +75,7 @@ export default function Navbar() {
         : studentLinks;
 
   const profileLink = isAuthenticated && (
-    <Link to="/profile" className="user-nav-label" aria-label="Update profile picture and account profile">
+    <Link to="/profile" className="user-nav-label" onClick={() => setOpen(false)} aria-label="Update profile picture and account profile">
       {user?.profilePictureUrl
         ? <img className="user-nav-avatar" src={getPublicFileUrl(user.profilePictureUrl)} alt="" />
         : <UserCircle2 size={20} />}
@@ -58,7 +84,7 @@ export default function Navbar() {
   );
 
   return (
-    <nav className="navbar">
+    <nav className="navbar" ref={navRef}>
       <div className="container nav-inner">
         <Link to="/" className="logo">
           <span className="logo-mark"><img src="/brand/virtualteach-mark.svg" alt="" /></span>
@@ -81,8 +107,9 @@ export default function Navbar() {
 
         <button
           type="button"
+          ref={toggleRef}
           className="btn btn-ghost mobile-menu-toggle"
-          onClick={() => setOpen(!open)}
+          onClick={() => setOpen((current) => !current)}
           aria-expanded={open}
           aria-controls="mobile-navigation"
           aria-label={open ? 'Close navigation menu' : 'Open navigation menu'}

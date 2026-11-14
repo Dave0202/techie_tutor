@@ -45,6 +45,11 @@ public class AdminController {
         return ResponseEntity.ok(adminService.updateUser(id, request));
     }
 
+    @PostMapping("/{id}/confirm-tutor")
+    public ResponseEntity<AdminUserResponse> confirmTutor(@PathVariable Long id) {
+        return ResponseEntity.ok(adminService.confirmTutor(id));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(
             @PathVariable Long id,

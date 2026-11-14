@@ -12,6 +12,7 @@ public class AdminUserResponse {
     private String email;
     private String profilePictureUrl;
     private Role role;
+    private boolean tutorConfirmed;
     private String bio;
     private String subjects;
     private Double hourlyRate;

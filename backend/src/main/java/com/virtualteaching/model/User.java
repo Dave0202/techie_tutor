@@ -47,6 +47,9 @@ public class User {
     @Column(nullable = false)
     private Role role;
 
+    @Column(name = "tutor_confirmed", nullable = false)
+    private boolean tutorConfirmed;
+
     @JsonIgnore
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private TutorProfile tutorProfile;

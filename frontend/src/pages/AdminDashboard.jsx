@@ -1,4 +1,4 @@
-import { BookOpenText, ShieldCheck, Users } from 'lucide-react';
+import { BookOpenText, CheckCircle2, ShieldCheck, Users } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import FeedbackState from '../components/FeedbackState';
@@ -9,6 +9,8 @@ export default function AdminDashboard() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [actionError, setActionError] = useState('');
+  const [confirmingUserId, setConfirmingUserId] = useState(null);
   const [retry, setRetry] = useState(0);
 
   useEffect(() => {
@@ -32,6 +34,26 @@ export default function AdminDashboard() {
     administrators: users.filter((user) => user.role === 'ADMIN').length,
   }), [users]);
 
+  const confirmTutor = async (id) => {
+    setConfirmingUserId(id);
+    setActionError('');
+    try {
+      const response = await api.post(`/admin/users/${id}/confirm-tutor`);
+      setUsers((currentUsers) => currentUsers.map((user) => (
+        user.id === id ? response.data : user
+      )));
+    } catch (requestError) {
+      setActionError(
+        requestError.response?.data?.error?.message
+        || requestError.response?.data?.message
+        || requestError.message
+        || 'We could not confirm this instructor. Please try again.',
+      );
+    } finally {
+      setConfirmingUserId(null);
+    }
+  };
+
   if (loading) {
     return <div className="container page-content"><FeedbackState type="loading" layout="dashboard" title="Opening the admin workspace" description="Loading accounts and platform totals." /></div>;
   }
@@ -51,6 +73,7 @@ export default function AdminDashboard() {
       </div>
 
       {error && <div className="alert alert-error page-alert" role="alert">{error}</div>}
+      {actionError && <div className="alert alert-error page-alert" role="alert">{actionError}</div>}
       <div className="dashboard-grid">
         <div className="metric-card"><div className="muted-label">Students</div><div className="value">{counts.students}</div></div>
         <div className="metric-card"><div className="muted-label">Tutors</div><div className="value">{counts.tutors}</div></div>
@@ -71,6 +94,19 @@ export default function AdminDashboard() {
                 : <div className="admin-user-avatar admin-user-initial" aria-hidden="true">{account.name?.charAt(0)?.toUpperCase()}</div>}
               <div className="admin-user-details"><strong>{account.name}</strong><span>{account.email}</span></div>
               <span className="badge badge-primary">{account.role}</span>
+              {account.role === 'TUTOR' && (
+                account.tutorConfirmed
+                  ? <span className="badge badge-success">Confirmed instructor</span>
+                  : <button
+                      className="btn btn-primary"
+                      type="button"
+                      onClick={() => confirmTutor(account.id)}
+                      disabled={confirmingUserId === account.id}
+                    >
+                      <CheckCircle2 size={16} />
+                      {confirmingUserId === account.id ? 'Confirming...' : 'Confirm instructor'}
+                    </button>
+              )}
             </article>
           ))}
         </div>

@@ -84,8 +84,8 @@ export default function ProfilePage() {
     <div className="container page-content">
       <div className="page-title-row">
         <div>
-          <span className="eyebrow"><Camera size={14} /> Account profile</span>
-          <h1 className="page-heading">Your TechieTutor profile.</h1>
+          <span className="eyebrow"><Camera size={14} /> Profile settings</span>
+          <h1 className="page-heading">Profile settings</h1>
           <p>Update the picture shown to students, tutors, and administrators across the platform.</p>
         </div>
       </div>
@@ -104,7 +104,7 @@ export default function ProfilePage() {
           <p>{user?.email}</p>
           <span className="badge badge-primary">{user?.role}</span>
           <div className="field-group profile-picture-file">
-            <label className="field-label" htmlFor="profile-picture">Choose a profile picture</label>
+            <label className="field-label" htmlFor="profile-picture">Change picture</label>
             <input
               id="profile-picture"
               className="input"
@@ -113,10 +113,13 @@ export default function ProfilePage() {
               onChange={handleFileChange}
               aria-describedby="profile-picture-help"
             />
-            <small id="profile-picture-help" className="field-help">JPG, PNG, or WebP · maximum 5 MB</small>
+            <small id="profile-picture-help" className="field-help">
+              Accepted formats: JPG, JPEG, PNG, WebP<br />
+              Maximum file size: 5 MB
+            </small>
           </div>
           <button className="btn btn-primary" type="submit" disabled={saving || !selectedFile}>
-            {saving ? <><Loader2 size={16} className="loading-dots" /> Saving picture...</> : <><Upload size={16} /> Save picture</>}
+            {saving ? <><Loader2 size={16} className="loading-dots" /> Saving picture...</> : <><Upload size={16} /> Save profile picture</>}
           </button>
         </div>
       </form>

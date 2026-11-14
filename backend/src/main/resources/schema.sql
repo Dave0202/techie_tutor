@@ -4,7 +4,8 @@ CREATE TABLE IF NOT EXISTS users (
     name VARCHAR(255) NOT NULL,
     profile_picture_url VARCHAR(2048),
     password VARCHAR(255) NOT NULL,
-    role VARCHAR(20) NOT NULL CHECK (role IN ('ADMIN', 'STUDENT', 'TUTOR'))
+    role VARCHAR(20) NOT NULL CHECK (role IN ('ADMIN', 'STUDENT', 'TUTOR')),
+    tutor_confirmed BOOLEAN NOT NULL DEFAULT FALSE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS tutor_profiles (
