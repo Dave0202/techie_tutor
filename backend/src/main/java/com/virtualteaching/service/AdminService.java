@@ -5,13 +5,14 @@ import com.virtualteaching.dto.AdminUpdateUserRequest;
 import com.virtualteaching.dto.AdminUserResponse;
 import com.virtualteaching.exception.ConflictException;
 import com.virtualteaching.exception.NotFoundException;
+import com.virtualteaching.model.AccountStatus;
 import com.virtualteaching.model.Role;
 import com.virtualteaching.model.TutorProfile;
 import com.virtualteaching.model.User;
-import com.virtualteaching.repository.ResourceRepository;
-import com.virtualteaching.repository.SessionRepository;
 import com.virtualteaching.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,11 +25,10 @@ import java.util.Locale;
 public class AdminService {
 
     private final UserRepository userRepository;
-    private final SessionRepository sessionRepository;
-    private final ResourceRepository resourceRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
+    @Cacheable("adminUserDirectory")
     public List<AdminUserResponse> getUsers() {
         return userRepository.findAllByOrderByRoleAscNameAsc().stream()
                 .map(this::toResponse)
@@ -36,6 +36,7 @@ public class AdminService {
     }
 
     @Transactional
+    @CacheEvict(value = {"adminUserDirectory", "publicTutors", "publicResources"}, allEntries = true)
     public AdminUserResponse createUser(AdminCreateUserRequest request) {
         String email = normalizeEmail(request.getEmail());
         if (userRepository.existsByEmail(email)) {
@@ -58,6 +59,7 @@ public class AdminService {
     }
 
     @Transactional
+    @CacheEvict(value = {"adminUserDirectory", "publicTutors", "publicResources"}, allEntries = true)
     public AdminUserResponse updateUser(Long id, AdminUpdateUserRequest request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found"));
@@ -97,34 +99,100 @@ public class AdminService {
     }
 
     @Transactional
+    @CacheEvict(value = {"adminUserDirectory", "publicTutors", "publicResources"}, allEntries = true)
     public AdminUserResponse confirmTutor(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found"));
         if (user.getRole() != Role.TUTOR) {
             throw new ConflictException("Only tutor accounts can be confirmed");
         }
+        if (user.getAccountStatus() != AccountStatus.ACTIVE) {
+            throw new ConflictException("Only active tutor accounts can be confirmed");
+        }
         user.setTutorConfirmed(true);
         return toResponse(userRepository.save(user));
     }
 
     @Transactional
+    @CacheEvict(value = {"adminUserDirectory", "publicTutors", "publicResources"}, allEntries = true)
+    public AdminUserResponse suspendUser(Long id, String currentAdminEmail) {
+        User user = getUser(id);
+        ensureNotSelf(user, currentAdminEmail);
+        ensureNotLastActiveAdmin(user);
+        if (user.getAccountStatus() == AccountStatus.TERMINATED
+                || user.getAccountStatus() == AccountStatus.DELETED) {
+            throw new ConflictException("Terminated or deleted accounts cannot be suspended");
+        }
+        user.setAccountStatus(AccountStatus.SUSPENDED);
+        return toResponse(userRepository.save(user));
+    }
+
+    @Transactional
+    @CacheEvict(value = {"adminUserDirectory", "publicTutors", "publicResources"}, allEntries = true)
+    public AdminUserResponse restoreUser(Long id) {
+        User user = getUser(id);
+        if (user.getAccountStatus() != AccountStatus.SUSPENDED) {
+            throw new ConflictException("Only suspended accounts can be restored");
+        }
+        user.setAccountStatus(AccountStatus.ACTIVE);
+        return toResponse(userRepository.save(user));
+    }
+
+    @Transactional
+    @CacheEvict(value = {"adminUserDirectory", "publicTutors", "publicResources"}, allEntries = true)
+    public AdminUserResponse terminateUser(Long id, String currentAdminEmail) {
+        User user = getUser(id);
+        ensureNotSelf(user, currentAdminEmail);
+        ensureNotLastActiveAdmin(user);
+        if (user.getAccountStatus() == AccountStatus.DELETED) {
+            throw new ConflictException("Deleted accounts cannot be terminated");
+        }
+        user.setAccountStatus(AccountStatus.TERMINATED);
+        return toResponse(userRepository.save(user));
+    }
+
+    @Transactional
+    @CacheEvict(value = {"adminUserDirectory", "publicTutors", "publicResources"}, allEntries = true)
     public void deleteUser(Long id, String currentAdminEmail) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("User not found"));
-        if (user.getEmail().equalsIgnoreCase(currentAdminEmail)) {
-            throw new ConflictException("You cannot delete your own administrator account");
+        User user = getUser(id);
+        ensureNotSelf(user, currentAdminEmail);
+        ensureNotLastActiveAdmin(user);
+        if (user.getAccountStatus() == AccountStatus.DELETED) {
+            throw new ConflictException("Account has already been deleted");
         }
-        protectLastAdmin(user, null);
-        if (sessionRepository.existsByStudent_IdOrTutor_Id(id, id) || resourceRepository.existsByTutorId(id)) {
-            throw new ConflictException("This account has sessions or resources; preserve its learning history before deletion");
-        }
-        userRepository.delete(user);
+
+        user.setName("Deleted account");
+        user.setEmail("deleted+" + user.getId() + "@deleted.invalid");
+        user.setPassword(passwordEncoder.encode(java.util.UUID.randomUUID().toString()));
+        user.setProfilePictureUrl(null);
+        user.setTutorConfirmed(false);
+        user.setTutorProfile(null);
+        user.setAccountStatus(AccountStatus.DELETED);
+        userRepository.save(user);
     }
 
     private void protectLastAdmin(User user, Role updatedRole) {
-        if (user.getRole() == Role.ADMIN && updatedRole != Role.ADMIN
-                && userRepository.countByRole(Role.ADMIN) <= 1) {
-            throw new ConflictException("The last administrator cannot be demoted or deleted");
+        if (user.getRole() == Role.ADMIN && user.getAccountStatus() == AccountStatus.ACTIVE
+                && updatedRole != Role.ADMIN) {
+            ensureNotLastActiveAdmin(user);
+        }
+    }
+
+    private User getUser(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+    }
+
+    private void ensureNotSelf(User user, String currentAdminEmail) {
+        if (user.getEmail().equalsIgnoreCase(currentAdminEmail)) {
+            throw new ConflictException("You cannot change your own administrator account");
+        }
+    }
+
+    private void ensureNotLastActiveAdmin(User user) {
+        if (user.getRole() == Role.ADMIN && user.getAccountStatus() == AccountStatus.ACTIVE
+                && userRepository.countActiveByRole(Role.ADMIN, AccountStatus.ACTIVE) <= 1) {
+            throw new ConflictException("The last active administrator cannot be suspended, terminated, or deleted");
         }
     }
 
@@ -158,6 +226,7 @@ public class AdminService {
                 .profilePictureUrl(user.getProfilePictureUrl())
                 .role(user.getRole())
                 .tutorConfirmed(user.isTutorConfirmed())
+                .accountStatus(user.getAccountStatus())
                 .bio(profile == null ? null : profile.getBio())
                 .subjects(profile == null ? null : profile.getSubjects())
                 .hourlyRate(profile == null ? null : profile.getHourlyRate())

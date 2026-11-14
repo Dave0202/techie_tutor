@@ -34,6 +34,8 @@ export function AuthProvider({ children }) {
       email: response.data.email,
       role: response.data.role,
       profilePictureUrl: response.data.profilePictureUrl || '',
+      tutorConfirmed: Boolean(response.data.tutorConfirmed),
+      accountStatus: response.data.accountStatus || 'ACTIVE',
     };
     setUser(loggedInUser);
     setToken(response.data.token);
@@ -48,6 +50,8 @@ export function AuthProvider({ children }) {
       email: response.data.email,
       role: response.data.role,
       profilePictureUrl: response.data.profilePictureUrl || '',
+      tutorConfirmed: Boolean(response.data.tutorConfirmed),
+      accountStatus: response.data.accountStatus || 'ACTIVE',
     };
     setUser(registeredUser);
     setToken(response.data.token);

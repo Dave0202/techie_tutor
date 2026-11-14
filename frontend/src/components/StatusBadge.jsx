@@ -1,6 +1,7 @@
 const statusClassNames = {
   PENDING: 'status-pending',
   CONFIRMED: 'status-confirmed',
+  IN_PROGRESS: 'status-in-progress',
   COMPLETED: 'status-completed',
   CANCELLED: 'status-cancelled',
 };

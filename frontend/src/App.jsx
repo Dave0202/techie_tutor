@@ -6,6 +6,9 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import StudentDashboard from './pages/StudentDashboard';
 import TutorDashboard from './pages/TutorDashboard';
+import AdminDashboard from './pages/AdminDashboard';
+import TutorPendingPage from './pages/TutorPendingPage';
+import MessagesPage from './pages/MessagesPage';
 import TutorSearchPage from './pages/TutorSearchPage';
 import TutorProfilePage from './pages/TutorProfilePage';
 import SessionPage from './pages/SessionPage';
@@ -28,8 +31,15 @@ function AppRoutes() {
         <Route path="/tutors/:id" element={<TutorProfilePage />} />
 
         <Route element={<ProtectedRoute /> }>
-          <Route path="/dashboard" element={user?.role === 'TUTOR' ? <TutorDashboard /> : <StudentDashboard />} />
+          <Route path="/dashboard" element={
+            user?.role === 'ADMIN'
+              ? <AdminDashboard />
+              : user?.role === 'TUTOR'
+                ? user.tutorConfirmed ? <TutorDashboard /> : <TutorPendingPage />
+                : <StudentDashboard />
+          } />
           <Route path="/sessions" element={<SessionPage />} />
+          <Route path="/messages" element={<MessagesPage />} />
           <Route path="/resources" element={<ResourcePage />} />
           <Route path="/profile" element={<ProfilePage />} />
         </Route>

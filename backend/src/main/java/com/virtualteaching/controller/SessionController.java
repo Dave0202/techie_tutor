@@ -57,4 +57,22 @@ public class SessionController {
                 .orElseThrow(() -> new NotFoundException("User not found"));
         return ResponseEntity.ok(sessionService.updateStatus(currentUser, id, status));
     }
+
+    @PostMapping("/{id}/start")
+    public ResponseEntity<SessionResponse> startClass(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable Long id) {
+        User currentUser = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new NotFoundException("User not found"));
+        return ResponseEntity.ok(sessionService.startClass(currentUser, id));
+    }
+
+    @PostMapping("/{id}/end")
+    public ResponseEntity<SessionResponse> endClass(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable Long id) {
+        User currentUser = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new NotFoundException("User not found"));
+        return ResponseEntity.ok(sessionService.endClass(currentUser, id));
+    }
 }

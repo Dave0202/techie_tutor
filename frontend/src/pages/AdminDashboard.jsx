@@ -1,4 +1,4 @@
-import { BookOpenText, CheckCircle2, ShieldCheck, Users } from 'lucide-react';
+import { BookOpenText, CheckCircle2, PauseCircle, RotateCcw, ShieldCheck, Trash2, Users, UserX } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import FeedbackState from '../components/FeedbackState';
@@ -10,7 +10,7 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [actionError, setActionError] = useState('');
-  const [confirmingUserId, setConfirmingUserId] = useState(null);
+  const [updatingUserId, setUpdatingUserId] = useState(null);
   const [retry, setRetry] = useState(0);
 
   useEffect(() => {
@@ -32,25 +32,46 @@ export default function AdminDashboard() {
     students: users.filter((user) => user.role === 'STUDENT').length,
     tutors: users.filter((user) => user.role === 'TUTOR').length,
     administrators: users.filter((user) => user.role === 'ADMIN').length,
+    pendingTutors: users.filter((user) => user.role === 'TUTOR' && !user.tutorConfirmed && user.accountStatus === 'ACTIVE').length,
   }), [users]);
 
-  const confirmTutor = async (id) => {
-    setConfirmingUserId(id);
+  const manageAccount = async (account, action) => {
+    const confirmations = {
+      suspend: `Suspend ${account.name}? They will lose access until restored.`,
+      terminate: `Terminate ${account.name}? This permanently disables the account.`,
+      delete: `Delete ${account.name}? Their account will be anonymized while learning history is preserved.`,
+    };
+    if (confirmations[action] && !window.confirm(confirmations[action])) return;
+
+    setUpdatingUserId(account.id);
     setActionError('');
     try {
-      const response = await api.post(`/admin/users/${id}/confirm-tutor`);
+      if (action === 'delete') {
+        await api.delete(`/admin/users/${account.id}`);
+        setUsers((currentUsers) => currentUsers.map((user) => (
+          user.id === account.id
+            ? { ...user, name: 'Deleted account', email: `deleted+${user.id}@deleted.invalid`, accountStatus: 'DELETED', tutorConfirmed: false }
+            : user
+        )));
+        return;
+      }
+
+      const request = action === 'confirm'
+        ? api.post(`/admin/users/${account.id}/confirm-tutor`)
+        : api.patch(`/admin/users/${account.id}/${action}`);
+      const response = await request;
       setUsers((currentUsers) => currentUsers.map((user) => (
-        user.id === id ? response.data : user
+        user.id === account.id ? response.data : user
       )));
     } catch (requestError) {
       setActionError(
         requestError.response?.data?.error?.message
         || requestError.response?.data?.message
         || requestError.message
-        || 'We could not confirm this instructor. Please try again.',
+        || 'We could not update this account. Please try again.',
       );
     } finally {
-      setConfirmingUserId(null);
+      setUpdatingUserId(null);
     }
   };
 
@@ -69,7 +90,11 @@ export default function AdminDashboard() {
           <h1 className="page-heading">Platform overview.</h1>
           <p>Manage learning materials and keep track of the TechieTutor community.</p>
         </div>
-        <Link to="/resources" className="btn btn-primary"><BookOpenText size={16} /> Post homework or materials</Link>
+        <div className="page-actions">
+          <Link to="/messages" className="btn btn-secondary">Review messages</Link>
+          <Link to="/sessions" className="btn btn-secondary">Review classes</Link>
+          <Link to="/resources" className="btn btn-primary"><BookOpenText size={16} /> Post homework or materials</Link>
+        </div>
       </div>
 
       {error && <div className="alert alert-error page-alert" role="alert">{error}</div>}
@@ -78,7 +103,7 @@ export default function AdminDashboard() {
         <div className="metric-card"><div className="muted-label">Students</div><div className="value">{counts.students}</div></div>
         <div className="metric-card"><div className="muted-label">Tutors</div><div className="value">{counts.tutors}</div></div>
         <div className="metric-card"><div className="muted-label">Administrators</div><div className="value">{counts.administrators}</div></div>
-        <div className="metric-card"><div className="muted-label">All accounts</div><div className="value">{users.length}</div></div>
+        <div className="metric-card"><div className="muted-label">Pending tutor approvals</div><div className="value">{counts.pendingTutors}</div></div>
       </div>
 
       <section className="feature-card admin-directory">
@@ -94,18 +119,40 @@ export default function AdminDashboard() {
                 : <div className="admin-user-avatar admin-user-initial" aria-hidden="true">{account.name?.charAt(0)?.toUpperCase()}</div>}
               <div className="admin-user-details"><strong>{account.name}</strong><span>{account.email}</span></div>
               <span className="badge badge-primary">{account.role}</span>
+              {account.accountStatus !== 'ACTIVE' && <span className="badge badge-warning">{account.accountStatus}</span>}
               {account.role === 'TUTOR' && (
                 account.tutorConfirmed
                   ? <span className="badge badge-success">Confirmed instructor</span>
-                  : <button
+                  : account.accountStatus === 'ACTIVE' && <button
                       className="btn btn-primary"
                       type="button"
-                      onClick={() => confirmTutor(account.id)}
-                      disabled={confirmingUserId === account.id}
+                      onClick={() => manageAccount(account, 'confirm')}
+                      disabled={updatingUserId === account.id}
                     >
                       <CheckCircle2 size={16} />
-                      {confirmingUserId === account.id ? 'Confirming...' : 'Confirm instructor'}
+                      {updatingUserId === account.id ? 'Confirming...' : 'Confirm instructor'}
                     </button>
+              )}
+              {account.role !== 'ADMIN' && account.accountStatus !== 'DELETED' && (
+                <div className="admin-account-actions">
+                  {account.accountStatus === 'SUSPENDED' ? (
+                    <button className="btn btn-secondary" type="button" onClick={() => manageAccount(account, 'restore')} disabled={updatingUserId === account.id}>
+                      <RotateCcw size={15} /> Restore
+                    </button>
+                  ) : (
+                    <button className="btn btn-secondary" type="button" onClick={() => manageAccount(account, 'suspend')} disabled={updatingUserId === account.id || account.accountStatus !== 'ACTIVE'}>
+                      <PauseCircle size={15} /> Suspend
+                    </button>
+                  )}
+                  {account.accountStatus !== 'TERMINATED' && (
+                    <button className="btn btn-danger" type="button" onClick={() => manageAccount(account, 'terminate')} disabled={updatingUserId === account.id}>
+                      <UserX size={15} /> Terminate
+                    </button>
+                  )}
+                  <button className="btn btn-danger" type="button" onClick={() => manageAccount(account, 'delete')} disabled={updatingUserId === account.id}>
+                    <Trash2 size={15} /> Delete
+                  </button>
+                </div>
               )}
             </article>
           ))}

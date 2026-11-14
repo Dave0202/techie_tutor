@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,6 +49,25 @@ public class AdminController {
     @PostMapping("/{id}/confirm-tutor")
     public ResponseEntity<AdminUserResponse> confirmTutor(@PathVariable Long id) {
         return ResponseEntity.ok(adminService.confirmTutor(id));
+    }
+
+    @PatchMapping("/{id}/suspend")
+    public ResponseEntity<AdminUserResponse> suspendUser(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(adminService.suspendUser(id, userDetails.getUsername()));
+    }
+
+    @PatchMapping("/{id}/restore")
+    public ResponseEntity<AdminUserResponse> restoreUser(@PathVariable Long id) {
+        return ResponseEntity.ok(adminService.restoreUser(id));
+    }
+
+    @PatchMapping("/{id}/terminate")
+    public ResponseEntity<AdminUserResponse> terminateUser(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(adminService.terminateUser(id, userDetails.getUsername()));
     }
 
     @DeleteMapping("/{id}")

@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -50,7 +51,23 @@ public class User {
     @Column(name = "tutor_confirmed", nullable = false)
     private boolean tutorConfirmed;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "account_status", length = 20)
+    @Builder.Default
+    private AccountStatus accountStatus = AccountStatus.ACTIVE;
+
     @JsonIgnore
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private TutorProfile tutorProfile;
+
+    public AccountStatus getAccountStatus() {
+        return accountStatus == null ? AccountStatus.ACTIVE : accountStatus;
+    }
+
+    @PrePersist
+    private void setDefaultAccountStatus() {
+        if (accountStatus == null) {
+            accountStatus = AccountStatus.ACTIVE;
+        }
+    }
 }

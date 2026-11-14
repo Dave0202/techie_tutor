@@ -98,6 +98,7 @@ public class DataSeeder implements ApplicationRunner {
     }
 
     private void setTutorProfile(User tutor, String bio, String subjects, Double hourlyRate) {
+        tutor.setTutorConfirmed(true);
         TutorProfile profile = TutorProfile.builder()
                 .user(tutor)
                 .bio(bio)

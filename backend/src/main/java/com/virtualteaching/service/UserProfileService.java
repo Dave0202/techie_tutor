@@ -6,6 +6,7 @@ import com.virtualteaching.exception.NotFoundException;
 import com.virtualteaching.model.User;
 import com.virtualteaching.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +28,7 @@ public class UserProfileService {
     }
 
     @Transactional
+    @CacheEvict(value = {"adminUserDirectory", "publicTutors"}, allEntries = true)
     public ProfilePictureResponse updateProfilePicture(String email, String profilePictureUrl) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("User not found"));

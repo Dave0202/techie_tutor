@@ -63,6 +63,8 @@ public class AuthService {
                 .email(savedUser.getEmail())
                 .role(savedUser.getRole().name())
                 .profilePictureUrl(savedUser.getProfilePictureUrl())
+                .tutorConfirmed(savedUser.isTutorConfirmed())
+                .accountStatus(savedUser.getAccountStatus())
                 .build();
     }
 
@@ -87,6 +89,8 @@ public class AuthService {
                 .email(user.getEmail())
                 .role(user.getRole().name())
                 .profilePictureUrl(user.getProfilePictureUrl())
+                .tutorConfirmed(user.isTutorConfirmed())
+                .accountStatus(user.getAccountStatus())
                 .build();
     }
 

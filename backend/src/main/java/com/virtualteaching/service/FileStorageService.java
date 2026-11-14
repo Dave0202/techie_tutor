@@ -111,8 +111,8 @@ public class FileStorageService {
         }
 
         String fileName = UUID.randomUUID() + "." + extension;
-        try {
-            Files.copy(file.getInputStream(), resolveStoredFile(fileName), StandardCopyOption.REPLACE_EXISTING);
+        try (var input = file.getInputStream()) {
+            Files.copy(input, resolveStoredFile(fileName), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException exception) {
             throw new IllegalStateException("Could not store the uploaded file", exception);
         }

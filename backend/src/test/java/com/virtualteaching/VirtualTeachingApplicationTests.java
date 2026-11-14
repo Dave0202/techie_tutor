@@ -11,6 +11,7 @@ import com.virtualteaching.dto.TutorProfileRequest;
 import com.virtualteaching.model.Role;
 import com.virtualteaching.model.User;
 import com.virtualteaching.repository.ResourceRepository;
+import com.virtualteaching.repository.MessageRepository;
 import com.virtualteaching.repository.SessionRepository;
 import com.virtualteaching.repository.TutorProfileRepository;
 import com.virtualteaching.repository.UserRepository;
@@ -27,6 +28,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -60,8 +62,12 @@ class VirtualTeachingApplicationTests {
     @Autowired
     private ResourceRepository resourceRepository;
 
+    @Autowired
+    private MessageRepository messageRepository;
+
     @BeforeEach
     void setUp() {
+        messageRepository.deleteAll();
         resourceRepository.deleteAll();
         sessionRepository.deleteAll();
         tutorProfileRepository.deleteAll();
@@ -147,6 +153,9 @@ class VirtualTeachingApplicationTests {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(profileRequest)))
                 .andExpect(status().isOk());
+        User confirmedTutor = userRepository.findByEmail("alpha@example.com").orElseThrow();
+        confirmedTutor.setTutorConfirmed(true);
+        userRepository.save(confirmedTutor);
 
         RegisterRequest studentRequest = RegisterRequest.builder()
                 .name("Student Beta")
@@ -221,6 +230,19 @@ class VirtualTeachingApplicationTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("CONFIRMED"));
 
+        mockMvc.perform(post("/api/sessions/{id}/start", sessionId)
+                        .header("Authorization", "Bearer " + tutorToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("IN_PROGRESS"))
+                .andExpect(jsonPath("$.startedAt").isNotEmpty());
+
+        mockMvc.perform(post("/api/sessions/{id}/end", sessionId)
+                        .header("Authorization", "Bearer " + tutorToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("COMPLETED"))
+                .andExpect(jsonPath("$.endedAt").isNotEmpty())
+                .andExpect(jsonPath("$.actualDurationMinutes").isNumber());
+
         ResourceRequest resourceRequest = ResourceRequest.builder()
                 .title("Calculus Notes")
                 .description("Helpful overview of derivatives")
@@ -287,5 +309,136 @@ class VirtualTeachingApplicationTests {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(
                         "Profile picture must be an HTTPS image from the configured Cloudinary account"));
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void tutorsAreHiddenUntilAnAdminConfirmsThem() throws Exception {
+        RegisterRequest request = RegisterRequest.builder()
+                .name("Pending Tutor")
+                .email("pending-tutor@example.com")
+                .password("password123")
+                .role("TUTOR")
+                .build();
+        String response = mockMvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        Long tutorId = objectMapper.readTree(response).get("id").asLong();
+
+        mockMvc.perform(get("/api/tutors"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isEmpty());
+
+        mockMvc.perform(post("/api/admin/users/{id}/confirm-tutor", tutorId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.tutorConfirmed").value(true));
+
+        mockMvc.perform(get("/api/tutors/{id}", tutorId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(tutorId));
+    }
+
+    @Test
+    void flaggedMessagesAreDeliveredAndAppearInTheAdminReviewQueue() throws Exception {
+        RegisterRequest senderRequest = RegisterRequest.builder()
+                .name("Message Sender")
+                .email("sender@example.com")
+                .password("password123")
+                .role("STUDENT")
+                .build();
+        RegisterRequest recipientRequest = RegisterRequest.builder()
+                .name("Message Recipient")
+                .email("recipient@example.com")
+                .password("password123")
+                .role("STUDENT")
+                .build();
+        String senderResponse = mockMvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(senderRequest)))
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        String recipientResponse = mockMvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(recipientRequest)))
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        JsonNode sender = objectMapper.readTree(senderResponse);
+        JsonNode recipient = objectMapper.readTree(recipientResponse);
+        User admin = userRepository.save(User.builder()
+                .name("Test Admin")
+                .email("admin@example.com")
+                .password("not-used-by-mock-auth")
+                .role(Role.ADMIN)
+                .build());
+
+        String messageResponse = mockMvc.perform(post("/api/messages")
+                        .header("Authorization", "Bearer " + sender.get("token").asText())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"recipientId\":" + recipient.get("id").asLong()
+                                + ",\"content\":\"That was shit\"}"))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.flagged").value(true))
+                .andExpect(jsonPath("$.moderationStatus").value("PENDING_REVIEW"))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        Long messageId = objectMapper.readTree(messageResponse).get("id").asLong();
+
+        mockMvc.perform(get("/api/admin/messages/flagged")
+                        .with(user("admin@example.com").roles("ADMIN")))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(messageId));
+
+        mockMvc.perform(post("/api/admin/messages/{id}/review", messageId)
+                        .with(user("admin@example.com").roles("ADMIN")))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.moderationStatus").value("REVIEWED"))
+                .andExpect(jsonPath("$.reviewedByName").value(admin.getName()));
+    }
+
+    @Test
+    void suspensionBlocksExistingTokensAndCanBeReversed() throws Exception {
+        RegisterRequest request = RegisterRequest.builder()
+                .name("Suspended Student")
+                .email("suspended@example.com")
+                .password("password123")
+                .role("STUDENT")
+                .build();
+        String response = mockMvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        JsonNode registeredUser = objectMapper.readTree(response);
+        Long userId = registeredUser.get("id").asLong();
+        String token = registeredUser.get("token").asText();
+
+        mockMvc.perform(patch("/api/admin/users/{id}/suspend", userId)
+                        .with(user("admin@example.com").roles("ADMIN")))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.accountStatus").value("SUSPENDED"));
+
+        mockMvc.perform(get("/api/sessions/my-sessions")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isForbidden());
+
+        mockMvc.perform(patch("/api/admin/users/{id}/restore", userId)
+                        .with(user("admin@example.com").roles("ADMIN")))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.accountStatus").value("ACTIVE"));
+
+        mockMvc.perform(get("/api/sessions/my-sessions")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk());
     }
 }

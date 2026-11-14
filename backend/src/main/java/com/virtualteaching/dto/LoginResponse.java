@@ -1,5 +1,6 @@
 package com.virtualteaching.dto;
 
+import com.virtualteaching.model.AccountStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,4 +19,6 @@ public class LoginResponse {
     private String email;
     private String role;
     private String profilePictureUrl;
+    private boolean tutorConfirmed;
+    private AccountStatus accountStatus;
 }

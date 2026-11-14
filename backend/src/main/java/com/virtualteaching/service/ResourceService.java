@@ -4,11 +4,15 @@ import com.virtualteaching.dto.ResourceRequest;
 import com.virtualteaching.dto.ResourceResponse;
 import com.virtualteaching.exception.ForbiddenException;
 import com.virtualteaching.exception.ApiException;
+import com.virtualteaching.exception.ForbiddenException;
+import com.virtualteaching.model.AccountStatus;
 import com.virtualteaching.model.Resource;
 import com.virtualteaching.model.Role;
 import com.virtualteaching.model.User;
 import com.virtualteaching.repository.ResourceRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +28,7 @@ public class ResourceService {
     private final ResourceRepository resourceRepository;
     private final FileStorageService fileStorageService;
 
+    @CacheEvict(value = "publicResources", allEntries = true)
     public ResourceResponse addResource(User currentUser, ResourceRequest request) {
         requirePublisher(currentUser);
         String fileUrl = validateExternalUrl(request.getFileUrl());
@@ -42,6 +47,7 @@ public class ResourceService {
         return toResponse(saved);
     }
 
+    @CacheEvict(value = "publicResources", allEntries = true)
     public ResourceResponse addMaterial(
             User currentUser,
             String title,
@@ -73,8 +79,9 @@ public class ResourceService {
         return toResponse(resourceRepository.save(resource));
     }
 
+    @Cacheable("publicResources")
     public List<ResourceResponse> getAllResources() {
-        return resourceRepository.findAllByOrderByCreatedAtDesc().stream()
+        return resourceRepository.findVisibleResources(AccountStatus.ACTIVE).stream()
                 .map(this::toResponse)
                 .toList();
     }
@@ -94,6 +101,12 @@ public class ResourceService {
     }
 
     private void requirePublisher(User user) {
+        if (user.getAccountStatus() != AccountStatus.ACTIVE) {
+            throw new ForbiddenException("Inactive accounts cannot publish learning materials");
+        }
+        if (user.getRole() == Role.TUTOR && !user.isTutorConfirmed()) {
+            throw new ForbiddenException("Admin approval is required before tutors can publish learning materials");
+        }
         if (user.getRole() != Role.TUTOR && user.getRole() != Role.ADMIN) {
             throw new ForbiddenException("Only tutors and administrators can publish learning materials");
         }

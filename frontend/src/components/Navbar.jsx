@@ -54,6 +54,7 @@ export default function Navbar() {
     { to: '/sessions', label: 'My Sessions' },
     { to: '/resources', label: 'Resources' },
     { to: '/dashboard', label: 'Dashboard' },
+    { to: '/messages', label: 'Messages' },
   ];
 
   const tutorLinks = [
@@ -61,11 +62,14 @@ export default function Navbar() {
     { to: '/sessions', label: 'Sessions' },
     { to: '/tutor/profile', label: 'My Profile' },
     { to: '/resources', label: 'Resources' },
+    { to: '/messages', label: 'Messages' },
   ];
 
   const adminLinks = [
     { to: '/dashboard', label: 'Dashboard' },
+    { to: '/sessions', label: 'Sessions' },
     { to: '/resources', label: 'Resources' },
+    { to: '/messages', label: 'Messages' },
   ];
 
   const navItems = !isAuthenticated

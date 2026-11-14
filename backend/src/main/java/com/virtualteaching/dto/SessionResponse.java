@@ -21,6 +21,9 @@ public class SessionResponse {
     private Long tutorId;
     private String tutorName;
     private LocalDateTime scheduledTime;
+    private LocalDateTime startedAt;
+    private LocalDateTime endedAt;
+    private Long actualDurationMinutes;
     private Integer durationMinutes;
     private String subject;
     private SessionStatus status;

@@ -46,6 +46,12 @@ public class Session {
     @Column
     private Integer durationMinutes;
 
+    @Column(name = "started_at")
+    private LocalDateTime startedAt;
+
+    @Column(name = "ended_at")
+    private LocalDateTime endedAt;
+
     @Column(length = 160)
     private String subject;
 

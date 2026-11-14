@@ -70,7 +70,7 @@ export default function ResourcePage() {
         </div>
       </div>
 
-      {user?.role === 'TUTOR' && (
+      {user?.role === 'TUTOR' && user.tutorConfirmed && (
         <div className="form-card resource-form">
           <h3 style={{ marginTop: 0 }}>Publish a resource link</h3>
           <p className="field-help">Share a link to a document, lesson, or trusted learning site.</p>
@@ -93,6 +93,11 @@ export default function ResourcePage() {
               {submitting ? <><Loader2 size={16} className="loading-dots" /> Publishing...</> : <><Link2 size={16} /> Publish resource</>}
             </button>
           </form>
+        </div>
+      )}
+      {user?.role === 'TUTOR' && !user.tutorConfirmed && (
+        <div className="alert alert-success page-alert" role="status">
+          Your profile is awaiting admin approval. You can publish resources after your tutor account is confirmed.
         </div>
       )}
 

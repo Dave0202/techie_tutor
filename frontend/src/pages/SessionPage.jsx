@@ -1,4 +1,4 @@
-import { CheckCircle2, Loader2, XCircle } from 'lucide-react';
+import { CheckCircle2, Clock3, Loader2, Play, Square, XCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
@@ -46,6 +46,19 @@ export default function SessionPage() {
     }
   };
 
+  const updateClassTime = async (id, action) => {
+    setUpdatingSessionId(id);
+    setError('');
+    try {
+      await api.post(`/sessions/${id}/${action}`);
+      await loadSessions();
+    } catch (requestError) {
+      setError(requestError.response?.data?.message || 'We could not update class timing. Please try again.');
+    } finally {
+      setUpdatingSessionId(null);
+    }
+  };
+
   if (loading) {
     return <div className="container page-content"><FeedbackState type="loading" layout="cards" title="Loading your sessions" description="Your schedule will be ready in a moment." /></div>;
   }
@@ -58,7 +71,7 @@ export default function SessionPage() {
     <div className="container page-content">
       <div style={{ marginBottom: '1.5rem' }}>
         <div className="eyebrow">My sessions</div>
-        <h1 className="page-heading" style={{ margin: '0.7rem 0 0', fontSize: '2.4rem' }}>{user?.role === 'TUTOR' ? 'Session management' : 'Your schedule'}</h1>
+        <h1 className="page-heading" style={{ margin: '0.7rem 0 0', fontSize: '2.4rem' }}>{user?.role === 'ADMIN' ? 'Class monitoring' : user?.role === 'TUTOR' ? 'Session management' : 'Your schedule'}</h1>
       </div>
 
       {error && <div className="alert alert-error page-alert" role="alert">{error}</div>}
@@ -71,9 +84,14 @@ export default function SessionPage() {
                 <span className="muted-label">ID #{session.id}</span>
               </div>
 
-              <h3 style={{ margin: '0 0 0.7rem' }}>{user?.role === 'TUTOR' ? session.studentName : session.tutorName}</h3>
-              <p className="muted-label">{user?.role === 'TUTOR' ? 'Student' : 'Tutor'} · {session.subject || 'Tutoring session'} · {session.durationMinutes || 60} min</p>
+              <h3 style={{ margin: '0 0 0.7rem' }}>{user?.role === 'TUTOR' ? session.studentName : user?.role === 'ADMIN' ? `${session.tutorName} with ${session.studentName}` : session.tutorName}</h3>
+              <p className="muted-label">{session.subject || 'Tutoring session'} · Scheduled for {session.durationMinutes || 60} min</p>
               <p style={{ margin: 0, color: '#475569' }}>{formatDateTime(session.scheduledTime)}</p>
+              {session.startedAt && <p className="session-timing"><Clock3 size={14} /> Started {formatDateTime(session.startedAt)}</p>}
+              {session.endedAt && <p className="session-timing"><Clock3 size={14} /> Ended {formatDateTime(session.endedAt)}</p>}
+              {session.actualDurationMinutes != null && (
+                <p className="session-actual-duration">Actual class time: {session.actualDurationMinutes} minutes</p>
+              )}
 
               {user?.role === 'TUTOR' && session.status === 'PENDING' && (
                 <div style={{ display: 'flex', gap: '0.6rem', marginTop: '1rem', flexWrap: 'wrap' }}>
@@ -85,11 +103,16 @@ export default function SessionPage() {
               )}
               {user?.role === 'TUTOR' && session.status === 'CONFIRMED' && (
                 <div className="page-actions" style={{ marginTop: '1rem' }}>
-                  <button type="button" className="btn btn-secondary" onClick={() => updateStatus(session.id, 'COMPLETED')} disabled={updatingSessionId === session.id}>
-                    {updatingSessionId === session.id ? <><Loader2 size={16} className="loading-dots" /> Updating...</> : <><CheckCircle2 size={16} /> Mark completed</>}
+                  <button type="button" className="btn btn-primary" onClick={() => updateClassTime(session.id, 'start')} disabled={updatingSessionId === session.id}>
+                    {updatingSessionId === session.id ? <><Loader2 size={16} className="loading-dots" /> Updating...</> : <><Play size={16} /> Start class</>}
                   </button>
                   <button type="button" className="btn btn-danger" onClick={() => updateStatus(session.id, 'CANCELLED')} disabled={updatingSessionId === session.id}><XCircle size={16} /> Cancel</button>
                 </div>
+              )}
+              {user?.role === 'TUTOR' && session.status === 'IN_PROGRESS' && (
+                <button type="button" className="btn btn-primary" style={{ marginTop: '1rem' }} onClick={() => updateClassTime(session.id, 'end')} disabled={updatingSessionId === session.id}>
+                  {updatingSessionId === session.id ? <><Loader2 size={16} className="loading-dots" /> Updating...</> : <><Square size={16} /> End class</>}
+                </button>
               )}
               {user?.role === 'STUDENT' && ['PENDING', 'CONFIRMED'].includes(session.status) && (
                 <button type="button" className="btn btn-danger" style={{ marginTop: '1rem' }} onClick={() => updateStatus(session.id, 'CANCELLED')} disabled={updatingSessionId === session.id}>
