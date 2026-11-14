@@ -68,6 +68,10 @@ img { max-width: 100%; display: block; }
 .nav-links a:hover, .nav-links a.active { color: var(--primary); }
 .nav-links a.active { position: relative; }
 .nav-links a.active::after { content: ''; position: absolute; left: 0; right: 0; bottom: -10px; height: 2px; border-radius: 2px; background: var(--gold); }
+.currency-control { display: flex; align-items: center; gap: .45rem; }
+.currency-label { color: var(--muted); font-size: .8rem; font-weight: 650; }
+.currency-select { min-height: 40px; max-width: 9rem; border: 1px solid var(--line); border-radius: 10px; background: white; color: var(--ink); padding: .5rem .65rem; }
+.currency-rate-status { color: var(--muted); font-size: .7rem; }
 .mobile-menu-toggle { display: none; }
 .mobile-nav-panel { position: relative; z-index: 20; padding-bottom: 1rem; }
 .mobile-nav-panel .card { padding: 1rem; display: grid; gap: .75rem; }
@@ -382,6 +386,10 @@ img { max-width: 100%; display: block; }
   .admin-user-row > .btn { margin-left: auto; }
   .dashboard-resource-item { flex-wrap: wrap; }
   .nav-inner { min-height: 70px; }
+  .currency-control { gap: .25rem; }
+  .currency-label { display: none; }
+  .currency-select { max-width: 7rem; padding-inline: .4rem; }
+  .currency-rate-status { max-width: 6rem; }
   .form-card { padding: 1.25rem; }
   .profile-picture-card { grid-template-columns: 1fr; align-items: start; gap: 1rem; }
   .profile-picture-preview { min-height: 220px; max-width: 100%; }

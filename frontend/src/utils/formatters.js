@@ -7,11 +7,12 @@ const dateFormatter = new Intl.DateTimeFormat('en-GB', {
   dateStyle: 'medium',
 });
 
-const currencyFormatter = new Intl.NumberFormat('en-GB', {
-  style: 'currency',
-  currency: 'GBP',
-  maximumFractionDigits: 2,
-});
+const currencyLocales = {
+  GBP: 'en-GB',
+  NGN: 'en-NG',
+  USD: 'en-US',
+  EUR: 'en-IE',
+};
 
 export function formatDateTime(value) {
   const date = new Date(value);
@@ -23,9 +24,18 @@ export function formatDate(value) {
   return Number.isNaN(date.getTime()) ? 'Date unavailable' : dateFormatter.format(date);
 }
 
-export function formatCurrency(value) {
+export function formatCurrency(value, currency = 'GBP', rates = {}) {
   const amount = Number(value);
-  return Number.isFinite(amount) ? currencyFormatter.format(amount) : 'Price on request';
+  if (!Number.isFinite(amount)) return 'Price on request';
+
+  const rate = currency === 'GBP' ? 1 : Number(rates[currency]);
+  if (!Number.isFinite(rate) || rate <= 0) return 'Rate unavailable';
+
+  return new Intl.NumberFormat(currencyLocales[currency] || 'en-GB', {
+    style: 'currency',
+    currency,
+    maximumFractionDigits: 2,
+  }).format(amount * rate);
 }
 
 export function getLocalDateValue(date = new Date()) {

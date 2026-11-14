@@ -107,6 +107,7 @@ export default function TutorProfileEditPage() {
         <div className="field-group">
           <label className="field-label" htmlFor="hourlyRate">Hourly rate (£)</label>
           <input id="hourlyRate" name="hourlyRate" className="input" type="number" min="0" step="0.01" value={form.hourlyRate} onChange={handleChange} required />
+          <small className="field-help">Your rate is saved in GBP and converted for viewers using their currency selection.</small>
         </div>
 
         <button className="btn btn-primary" type="submit" disabled={saving}>

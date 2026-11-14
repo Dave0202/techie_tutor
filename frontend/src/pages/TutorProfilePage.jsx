@@ -5,11 +5,13 @@ import api from '../services/api';
 import TutorPortrait from '../components/TutorPortrait';
 import FeedbackState from '../components/FeedbackState';
 import { useAuth } from '../context/AuthContext';
-import { formatCurrency, getLocalDateValue } from '../utils/formatters';
+import { useCurrency } from '../context/CurrencyContext';
+import { getLocalDateValue } from '../utils/formatters';
 
 export default function TutorProfilePage() {
   const { id } = useParams();
   const { isAuthenticated, user } = useAuth();
+  const { formatCurrency } = useCurrency();
   const [tutor, setTutor] = useState(null);
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');

@@ -2,14 +2,16 @@ import { ArrowRight, BookOpenText, CalendarDays, Sparkles, Star, Users } from 'l
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useCurrency } from '../context/CurrencyContext';
 import api from '../services/api';
 import TutorPortrait from '../components/TutorPortrait';
 import FeedbackState from '../components/FeedbackState';
 import StatusBadge from '../components/StatusBadge';
-import { formatCurrency, formatDateTime, formatDate } from '../utils/formatters';
+import { formatDateTime, formatDate } from '../utils/formatters';
 
 export default function StudentDashboard() {
   const { user } = useAuth();
+  const { formatCurrency } = useCurrency();
   const [sessions, setSessions] = useState([]);
   const [tutors, setTutors] = useState([]);
   const [resources, setResources] = useState([]);

@@ -2,9 +2,9 @@ import { GraduationCap, Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
+import { useCurrency } from '../context/CurrencyContext';
 import TutorPortrait from '../components/TutorPortrait';
 import FeedbackState from '../components/FeedbackState';
-import { formatCurrency } from '../utils/formatters';
 
 const popularSubjects = [
   'Mathematics',
@@ -18,6 +18,7 @@ const popularSubjects = [
 ];
 
 export default function TutorSearchPage() {
+  const { formatCurrency } = useCurrency();
   const [subject, setSubject] = useState('');
   const [tutors, setTutors] = useState([]);
   const [loading, setLoading] = useState(true);

@@ -2,10 +2,12 @@ import { Menu, X, LogOut, UserCircle2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useCurrency } from '../context/CurrencyContext';
 import { getPublicFileUrl } from '../services/api';
 
 export default function Navbar() {
   const { user, logout, isAuthenticated } = useAuth();
+  const { currency, setCurrency, ratesStatus, ratesUpdatedAt } = useCurrency();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const navRef = useRef(null);
@@ -82,6 +84,15 @@ export default function Navbar() {
       <span>{user?.name}</span>
     </Link>
   );
+  const currencyStatus = currency === 'GBP'
+    ? ''
+    : ratesStatus === 'loading'
+      ? 'Loading rates…'
+      : ratesStatus === 'error'
+        ? 'Rates unavailable'
+        : ratesUpdatedAt
+          ? `Rates updated ${new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium' }).format(ratesUpdatedAt)}`
+          : 'Rates ready';
 
   return (
     <nav className="navbar" ref={navRef}>
@@ -103,6 +114,24 @@ export default function Navbar() {
             </>
           )}
           {!isAuthenticated && <Link to="/register" className="btn btn-primary">Get started</Link>}
+        </div>
+
+        <div className="currency-control">
+          <label className="currency-label" htmlFor="display-currency">Currency</label>
+          <select
+            id="display-currency"
+            className="currency-select"
+            value={currency}
+            onChange={(event) => setCurrency(event.target.value)}
+            aria-describedby="currency-status"
+            title={currencyStatus || 'Select the currency used to display tutor rates'}
+          >
+            <option value="GBP">GBP (£)</option>
+            <option value="NGN">NGN (₦)</option>
+            <option value="USD">USD ($)</option>
+            <option value="EUR">EUR (€)</option>
+          </select>
+          <span id="currency-status" className="currency-rate-status" role="status" aria-live="polite">{currencyStatus}</span>
         </div>
 
         <button
