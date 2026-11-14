@@ -81,7 +81,12 @@ export default function TutorSearchPage() {
           {tutors.map((tutor) => (
             <div key={tutor.id} className="tutor-card">
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-                <TutorPortrait id={tutor.id} name={tutor.name} className="avatar tutor-card-portrait" />
+                <TutorPortrait
+                  id={tutor.id}
+                  name={tutor.name}
+                  profilePictureUrl={tutor.profilePictureUrl}
+                  className="avatar tutor-card-portrait"
+                />
                 <div>
                   <h3 style={{ margin: 0 }}>{tutor.name}</h3>
                   <div className="muted-label"><GraduationCap size={13} style={{ verticalAlign: 'middle', marginRight: 4 }} /> Tutor profile</div>

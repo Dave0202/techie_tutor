@@ -127,7 +127,12 @@ export default function StudentDashboard() {
               {tutors.map((tutor) => (
                 <div key={tutor.id} className="session-mini-card">
                   <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-                    <TutorPortrait id={tutor.id} name={tutor.name} className="avatar small tutor-card-portrait" />
+                    <TutorPortrait
+                      id={tutor.id}
+                      name={tutor.name}
+                      profilePictureUrl={tutor.profilePictureUrl}
+                      className="avatar small tutor-card-portrait"
+                    />
                     <div>
                       <strong>{tutor.name}</strong>
                       <div className="muted-label">{tutor.subjects?.split(',')[0] || 'General support'}</div>

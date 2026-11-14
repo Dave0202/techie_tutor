@@ -131,7 +131,12 @@ export default function TutorProfilePage() {
       <div className="grid-2 profile-grid">
         <div className="feature-card profile-summary">
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.9rem' }}>
-            <TutorPortrait id={tutor.id} name={tutor.name} className="avatar tutor-profile-portrait" />
+            <TutorPortrait
+              id={tutor.id}
+              name={tutor.name}
+              profilePictureUrl={tutor.profilePictureUrl}
+              className="avatar tutor-profile-portrait"
+            />
             <div>
               <h2 style={{ margin: 0 }}>{tutor.name}</h2>
               <div className="muted-label">TechieTutor · Tutor</div>
