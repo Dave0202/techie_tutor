@@ -61,7 +61,7 @@ The JDBC URL enforces TLS with `sslMode=REQUIRED`. Do not put the database passw
    The Cloudinary preset must allow unsigned image uploads. Never put a Cloudinary API secret in frontend environment variables.
 
 5. Deploy the project and note the Vercel URL.
-6. In Render, set `CORS_ALLOWED_ORIGINS` to the exact Vercel site origin (for example `https://techietutor.vercel.app`). Add any custom domain or Vercel preview origin that needs API access, then redeploy the backend.
+6. The production origin `https://techietutor.vercel.app` is allowed by the backend. If you use a custom domain or Vercel preview origin, add its exact origin to Render's `CORS_ALLOWED_ORIGINS` variable and redeploy the backend.
 7. Redeploy the frontend after setting or changing `VITE_API_URL`; Vite embeds it at build time.
 
 ## 5. Verify the deployment
